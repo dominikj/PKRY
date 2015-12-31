@@ -13,9 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        start.cpp
+        start.cpp \
+    podprotokol1.cpp
 
-HEADERS  += start.h
+HEADERS  += start.h \
+    podprotokol1.h
 
 FORMS    += start.ui
 

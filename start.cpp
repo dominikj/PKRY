@@ -24,6 +24,10 @@ void Start::on_pushButton_2_clicked()
 
 void Start::on_pushButton_clicked()
 {
+    login = ui->lineEdit->text();
+    haslo = ui->lineEdit_2->text();
+    serwer = ui->lineEdit_3->text();
+
     if(checkLoginAndPassword() == true)
         std::cout << "good";
     else
