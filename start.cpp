@@ -3,6 +3,8 @@
 #include <QMessageBox>
 #include <iostream>
 
+bool Start::poprawne_logowanie = false;
+
 Start::Start(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Start)
@@ -29,7 +31,11 @@ void Start::on_pushButton_clicked()
     serwer = ui->lineEdit_3->text();
 
     if(checkLoginAndPassword() == true)
+    {
         std::cout << "good";
+
+        this->close();
+    }
     else
     {
 //        QMessageBox msgBox;
@@ -43,5 +49,6 @@ void Start::on_pushButton_clicked()
 bool Start::checkLoginAndPassword()
 {
     //tutaj komunikacja z serwerem w klasie Podprotokol1
-    return false;
+    poprawne_logowanie = true;
+    return true;
 }

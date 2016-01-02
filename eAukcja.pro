@@ -14,12 +14,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         start.cpp \
-    podprotokol1.cpp
+    podprotokol1.cpp \
+    oknoglowne.cpp
 
 HEADERS  += start.h \
-    podprotokol1.h
+    podprotokol1.h \
+    oknoglowne.h
 
-FORMS    += start.ui
+FORMS    += start.ui \
+    oknoglowne.ui
 
 INCLUDEPATH += .
 INCLUDEPATH += /usr/include/botan-1.10/

@@ -15,6 +15,7 @@ class Start : public QMainWindow
 public:
     explicit Start(QWidget *parent = 0);
     ~Start();
+    static bool poprawne_logowanie;
 
 private slots:
     void on_pushButton_2_clicked();
