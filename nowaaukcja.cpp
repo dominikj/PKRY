@@ -75,17 +75,23 @@ void NowaAukcja::on_pushButton_2_clicked()
     }
     else
     {
-        QString nazwa_aukcji = ui->lineEdit->text();
-        QString opis_aukcji = ui->textEdit->toPlainText();
-        QDateTime data_rozpoczecia = ui->dateTimeEdit->dateTime();
-        QDateTime data_zakonczenia = ui->dateTimeEdit_2->dateTime();
-        QList<QString> lista_kryteriow;
+
+
+        pola_aukcji.nazwa_aukcji = ui->lineEdit->text();
+        pola_aukcji.opis_aukcji = ui->textEdit->toPlainText();
+        pola_aukcji.data_rozpoczecia = ui->dateTimeEdit->dateTime();
+        pola_aukcji.data_zakonczenia = ui->dateTimeEdit_2->dateTime();
+//        QString nazwa_aukcji = ui->lineEdit->text();
+//        QString opis_aukcji = ui->textEdit->toPlainText();
+//        QDateTime data_rozpoczecia = ui->dateTimeEdit->dateTime();
+//        QDateTime data_zakonczenia = ui->dateTimeEdit_2->dateTime();
+//        QList<QString> lista_kryteriow;
         for(int i = 0; i < ui->listWidget->count(); i++)
         {
-            lista_kryteriow.append(ui->listWidget->takeItem(i)->text());
+            pola_aukcji.lista_kryteriow.append(ui->listWidget->item(i)->text());
         }
         //Teraz to trzeba jakoś zserializować i przesłać jako WPf
 
-        //Test ramki obok:
+        this->close();
     }
 }

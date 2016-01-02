@@ -1,6 +1,5 @@
 #include "oknoglowne.h"
 #include "ui_oknoglowne.h"
-#include "nowaaukcja.h"
 #include <QList>
 #include <QString>
 #include <QListWidgetItem>
@@ -61,8 +60,9 @@ void OknoGlowne::on_pushButton_2_clicked()
      * Odpowiada za obsługę kliknięć tworzących nowe przetargi.
      *
      */
-    NowaAukcja dodaj_aukcje(this);
-    dodaj_aukcje.setModal(true);
-    dodaj_aukcje.exec();
-
+//    NowaAukcja dodaj_aukcje(this);
+//    dodaj_aukcje.setModal(true);
+    nowa = new NowaAukcja();
+    nowa->setModal(true);
+    nowa->exec();
 }
