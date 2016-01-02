@@ -25,14 +25,20 @@ void Start::on_pushButton_2_clicked()
 
 void Start::on_pushButton_clicked()
 {
-    QString dane = "Testowe dane";
+
+ /*   QString dane = "Testowe dane";
     Szyfrowanie sz;
     Klucze k = sz.generujKlucze();
   QByteArray d = sz.szyfruj(k.publiczny,dane);
    QByteArray s = sz.deszyfruj(k.prywatny,d);
     QByteArray g = sz.podpisz(k.prywatny,dane.toLatin1());
     qDebug() << g;
-    qDebug() << sz.sprawdzPodpis(k.publiczny,g,dane.toLatin1());
+    qDebug() << sz.sprawdzPodpis(k.publiczny,g,dane.toLatin1());*/
+
+    login = ui->lineEdit->text();
+    haslo = ui->lineEdit_2->text();
+    serwer = ui->lineEdit_3->text();
+
     if(checkLoginAndPassword() == true)
         std::cout << "good";
     else

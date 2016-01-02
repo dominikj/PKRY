@@ -2,6 +2,7 @@
 #define START_H
 
 #include <QMainWindow>
+#include <QString>
 
 namespace Ui {
 class Start;
@@ -22,6 +23,9 @@ private slots:
 
 private:
     Ui::Start *ui;
+    QString serwer;
+    QString login;
+    QString haslo;
     bool checkLoginAndPassword();
 };
 

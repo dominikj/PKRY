@@ -13,19 +13,21 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        start.cpp \
+    start.cpp \
     tcp.cpp \
     szyfrowanie.cpp \
     baza.cpp \
     gui.cpp \
-    sterownik.cpp
+    sterownik.cpp \
+    podprotokol1.cpp
 
 HEADERS  += start.h \
     tcp.h \
     szyfrowanie.h \
     baza.h \
     gui.h \
-    sterownik.h
+    sterownik.h \
+    podprotokol1.h
 
 FORMS    += start.ui
 
