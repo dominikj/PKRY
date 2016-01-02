@@ -15,14 +15,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
         start.cpp \
     podprotokol1.cpp \
-    oknoglowne.cpp
+    oknoglowne.cpp \
+    nowaaukcja.cpp
 
 HEADERS  += start.h \
     podprotokol1.h \
-    oknoglowne.h
+    oknoglowne.h \
+    nowaaukcja.h
 
 FORMS    += start.ui \
-    oknoglowne.ui
+    oknoglowne.ui \
+    nowaaukcja.ui
 
 INCLUDEPATH += .
 INCLUDEPATH += /usr/include/botan-1.10/
