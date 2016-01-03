@@ -41,6 +41,8 @@ private slots:
 private:
     Ui::OknoGlowne *ui;
     QList<QString> listaAukcji;
+    QList<polaAukcji> listaAktywnychAukcji; //pierwsze - nr aukcji, drugie - warunki aukcji
+    polaAukcji konwertuj_do_struktury(QString wpis);
     void pierwsze_miejsce_na_liscie_odswieza_liste_aukcji(); //zamiast przycisku, dwuklik na pierwszy element
 };
 

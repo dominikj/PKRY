@@ -94,7 +94,34 @@ void NowaAukcja::on_pushButton_2_clicked()
             pola_aukcji.lista_kryteriow.append(ui->listWidget->item(i)->text());
         }
         //Teraz to trzeba jakoś zserializować i przesłać jako WPf
+        przygotuj_dane_aukcji_do_wyslania(pola_aukcji);
         emit nowa_aukcja(pola_aukcji);
         this->close();
     }
+}
+
+QString NowaAukcja::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
+{
+    /*!
+     * Wstępnie zwalidowane dane przygotowuje w postaci stringa do wysłania na serwer
+     * \brief wynik
+     */
+    QString wynik;
+    wynik = wynik + "nazwa=" + pA.nazwa_aukcji + ";";
+    wynik = wynik + "opis=" + pA.opis_aukcji + ";";
+    wynik = wynik + "data_roz=" + pA.data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
+    wynik = wynik + "data_zak=" + pA.data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
+    wynik = wynik + "kryteria={";
+    for(int i = 0; i < pA.lista_kryteriow.count();i++)
+    {
+        if (i == pA.lista_kryteriow.count()-1)
+        {
+            wynik = wynik + pA.lista_kryteriow[i];
+        }
+        else
+            wynik = wynik + pA.lista_kryteriow[i] + ",";
+    }
+    wynik = wynik + "}";
+    QMessageBox::critical(this,"Oj",wynik);
+    return wynik;
 }

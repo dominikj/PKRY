@@ -40,6 +40,7 @@ private slots:
 
 private:
     Ui::NowaAukcja *ui;
+    QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
 };
 
 #endif // NOWAAUKCJA_H
