@@ -1,6 +1,6 @@
 #include "tcp.h"
 
-bool tcp::polacz()
+bool Tcp::polacz()
 {
 _gniazdo = new QTcpSocket(this);
 _gniazdo->connectToHost(_adres, _port);
@@ -8,18 +8,22 @@ _gniazdo->connectToHost(_adres, _port);
         return true;
     }
     else
+    {
+        qDebug() << "Połączenie zakończono błędem";
         return false;
+
+    }
 }
 
-void tcp::wyslij(QByteArray dane){
+void Tcp::wyslij(QByteArray dane){
 _gniazdo->write(dane);
 }
 
-QString tcp::odbierz(){
+QString Tcp::odbierz(){
     _gniazdo->waitForReadyRead();
     return _gniazdo->readAll();
 }
 
-void tcp::zamknij(){
+void Tcp::zamknij(){
     _gniazdo->close();
 }

@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     baza.cpp \
     gui.cpp \
     sterownik.cpp \
-    podprotokol1.cpp
+    podprotokol1.cpp \
+    podprotokol.cpp
 
 HEADERS  += start.h \
     tcp.h \
@@ -27,7 +28,8 @@ HEADERS  += start.h \
     baza.h \
     gui.h \
     sterownik.h \
-    podprotokol1.h
+    podprotokol1.h \
+    podprotokol.h
 
 FORMS    += start.ui
 

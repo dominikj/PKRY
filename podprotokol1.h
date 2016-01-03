@@ -3,20 +3,21 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-
-class Podprotokol1
+#include "podprotokol.h"
+class Podprotokol1 : public Podprotokol
 {
 public:
-    Podprotokol1();
+    Podprotokol1(Szyfrowanie& szyf, Tcp& tcp, Baza& baza);
+    virtual bool wykonaj();
+    ~Podprotokol1();
+
+private:
     void podpisywanie_dokumentu();
     void kodowanie_asymetryczne();
     void odkodowanie_asymetryczne();
     void weryfikacja_podpisu();
     void generacja_PKG();
     void generacja_stempla_czasowego();
-    ~Podprotokol1();
-
-private:
     std::string Dc; //dokument Dc
     int SK_cca; //prywatny klucz do podpisania
     int PK_gap; //publiczny klucz GAPa

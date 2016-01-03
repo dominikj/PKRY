@@ -4,9 +4,11 @@
 #include <iostream>
 #include "tcp.h"
 #include "szyfrowanie.h"
-Start::Start(QWidget *parent) :
+#include "sterownik.h"
+Start::Start(QWidget *parent, Sterownik& ster) :
     QMainWindow(parent),
-    ui(new Ui::Start)
+    ui(new Ui::Start),
+    _sterownik(ster)
 {
     ui->setupUi(this);
 }
@@ -53,6 +55,8 @@ void Start::on_pushButton_clicked()
 
 bool Start::checkLoginAndPassword()
 {
-    //tutaj komunikacja z serwerem w klasie Podprotokol1
-    return false;
+    _sterownik.ustawDaneLogSer(login, haslo, serwer);
+    if (_sterownik.zaloguj())
+        return true;
+    else return false;
 }

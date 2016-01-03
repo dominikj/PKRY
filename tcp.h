@@ -4,11 +4,11 @@
 #include <QtNetwork/QTcpSocket>
 #include <QMainWindow>
 #include <iostream>
-class tcp: public QObject
+class Tcp: public QObject
 {
     Q_OBJECT
 public:
-    tcp(int port, QString adres):_port(port), _adres(adres){
+    Tcp(int port, QString adres):_port(port), _adres(adres){
         _gniazdo = NULL;
     }
     bool polacz();

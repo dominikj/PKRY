@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QString>
-
+class Sterownik;
 namespace Ui {
 class Start;
 }
@@ -13,7 +13,7 @@ class Start : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit Start(QWidget *parent = 0);
+    explicit Start(QWidget *parent, Sterownik& ster );
     ~Start();
 
 private slots:
@@ -26,6 +26,7 @@ private:
     QString serwer;
     QString login;
     QString haslo;
+    Sterownik& _sterownik;
     bool checkLoginAndPassword();
 };
 

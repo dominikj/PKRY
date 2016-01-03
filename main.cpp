@@ -1,11 +1,13 @@
-#include "start.h"
+
+#include "sterownik.h"
+
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Start w;
-    w.show();
+    Sterownik sterownik;
+
 
     return a.exec();
 }

@@ -4,7 +4,7 @@
 #include <QString>
 using namespace Botan;
 
-class Baza
+struct Baza
 {
 public:
     Baza();
@@ -12,7 +12,7 @@ public:
     QString SKcca;
     QString kluczGAP; //PKgap
     QString nazwaUzytkownika;
-    SecureVector<byte> haslo;
+    QString haslo;
     QString numerRejestracyjny; // NRc
     QString kluczPubliczny; //PKc
     QString KluczPrywatny; //SKc
