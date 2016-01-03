@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = eAukcja
@@ -13,15 +13,27 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        start.cpp \
+    start.cpp \
     podprotokol1.cpp \
     oknoglowne.cpp \
-    nowaaukcja.cpp
+    nowaaukcja.cpp \
+    tcp.cpp \
+    szyfrowanie.cpp \
+    baza.cpp \
+    gui.cpp \
+    sterownik.cpp \
+    podprotokol.cpp
 
 HEADERS  += start.h \
     podprotokol1.h \
     oknoglowne.h \
-    nowaaukcja.h
+    nowaaukcja.h \
+    tcp.h \
+    szyfrowanie.h \
+    baza.h \
+    gui.h \
+    sterownik.h \
+    podprotokol.h
 
 FORMS    += start.ui \
     oknoglowne.ui \
