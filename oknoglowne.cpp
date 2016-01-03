@@ -4,6 +4,7 @@
 #include <QString>
 #include <QListWidgetItem>
 #include <QWidget>
+#include <QMessageBox>
 
 
 QString OknoGlowne::ZMIENNA_ODSWIEZ = "ODŚWIEŻ...";
@@ -64,5 +65,17 @@ void OknoGlowne::on_pushButton_2_clicked()
 //    dodaj_aukcje.setModal(true);
     nowa = new NowaAukcja();
     nowa->setModal(true);
+    connect(nowa,SIGNAL(nowa_aukcja(polaAukcji)),this,SLOT(zlap_nowa_aukcje(polaAukcji)));
     nowa->exec();
+
+}
+
+void OknoGlowne::zlap_nowa_aukcje(polaAukcji pA)
+{
+    /*!
+      * Przechwytuje dane z okna dialogowego do stworzenia aukcji.
+      */
+    ui->plainTextEdit->insertPlainText(pA.nazwa_aukcji);
+    ui->plainTextEdit->insertPlainText("\n");
+    ui->plainTextEdit->insertPlainText(pA.opis_aukcji);
 }

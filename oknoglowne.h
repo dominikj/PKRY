@@ -30,6 +30,9 @@ public:
     void odswiez_liste_aukcji();    //jakby coś miało się zmienić i trzeba było pobrać nową listę z GAPa
     ~OknoGlowne();
 
+public slots:
+    void zlap_nowa_aukcje(polaAukcji pA);
+
 private slots:
     void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
     void on_pushButton_2_clicked();

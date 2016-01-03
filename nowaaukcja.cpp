@@ -91,7 +91,7 @@ void NowaAukcja::on_pushButton_2_clicked()
             pola_aukcji.lista_kryteriow.append(ui->listWidget->item(i)->text());
         }
         //Teraz to trzeba jakoś zserializować i przesłać jako WPf
-
+        emit nowa_aukcja(pola_aukcji);
         this->close();
     }
 }
