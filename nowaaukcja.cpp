@@ -61,7 +61,11 @@ void NowaAukcja::on_pushButton_2_clicked()
     /*!
      * Po kliknięciu następuje mała walidacja wpisanych pól, następnie dane są pobierane i wysyłane do GAPa.
      */
-    if(ui->lineEdit->text().isEmpty())
+    if(ui->lineEdit_2->text().isEmpty())
+    {
+        QMessageBox::critical(this,"Oj","Numer aukcji jest niezbędny, by mogła zostać ona stworzona na serwerze.");
+    }
+    else if(ui->lineEdit->text().isEmpty())
     {
         QMessageBox::critical(this,"Oj","Aukcja nie może pozostać anonimowa. Proszę, wpisz jej nazwę.");
     }
@@ -75,8 +79,7 @@ void NowaAukcja::on_pushButton_2_clicked()
     }
     else
     {
-
-
+        pola_aukcji.numer_aukcji = ui->lineEdit_2->text();
         pola_aukcji.nazwa_aukcji = ui->lineEdit->text();
         pola_aukcji.opis_aukcji = ui->textEdit->toPlainText();
         pola_aukcji.data_rozpoczecia = ui->dateTimeEdit->dateTime();

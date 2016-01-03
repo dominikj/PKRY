@@ -16,6 +16,7 @@ class NowaAukcja : public QDialog
 
 public:
     struct polaAukcji{
+        QString numer_aukcji;
         QString nazwa_aukcji;
         QString opis_aukcji;
         QDateTime data_rozpoczecia;
