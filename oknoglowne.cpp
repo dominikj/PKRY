@@ -168,3 +168,10 @@ void OknoGlowne::on_pushButton_clicked()
         oknooferty->exec();
     }
 }
+
+void OknoGlowne::on_pushButton_3_clicked()
+{
+    wyborzwyciezcy = new WybierzZwyciezce();
+    wyborzwyciezcy->setModal(true);
+    wyborzwyciezcy->exec();
+}

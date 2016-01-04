@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     gui.cpp \
     sterownik.cpp \
     podprotokol.cpp \
-    zlozoferte.cpp
+    zlozoferte.cpp \
+    wybierzzwyciezce.cpp
 
 HEADERS  += start.h \
     podprotokol1.h \
@@ -35,12 +36,14 @@ HEADERS  += start.h \
     gui.h \
     sterownik.h \
     podprotokol.h \
-    zlozoferte.h
+    zlozoferte.h \
+    wybierzzwyciezce.h
 
 FORMS    += start.ui \
     oknoglowne.ui \
     nowaaukcja.ui \
-    zlozoferte.ui
+    zlozoferte.ui \
+    wybierzzwyciezce.ui
 
 INCLUDEPATH += .
 INCLUDEPATH += /usr/include/botan-1.10/

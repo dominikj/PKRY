@@ -8,6 +8,7 @@
 #include <QListWidgetItem>
 #include "nowaaukcja.h"
 #include "zlozoferte.h"
+#include "wybierzzwyciezce.h"
 class Sterownik;
 class zlozOferte;
 namespace Ui {
@@ -30,6 +31,7 @@ public:
     explicit OknoGlowne(QWidget *parent, Sterownik& ster);
     NowaAukcja *nowa;
     zlozOferte *oknooferty;
+    WybierzZwyciezce *wyborzwyciezcy;
     static QString ZMIENNA_ODSWIEZ;  //można ustawić coś innego jako nazwę pola na liście, na którym dwuklik skutkuje odświeżeniem listy
     static QString nr_aktywnej_aukcji; //ostatni dwuklik na danej aukcji
     void zapelnij_liste_aukcji();   //tutaj dostanie listę aukcji z GAPa
@@ -44,6 +46,8 @@ private slots:
     void on_pushButton_2_clicked();
 
     void on_pushButton_clicked();
+
+    void on_pushButton_3_clicked();
 
 private:
     Ui::OknoGlowne *ui;
