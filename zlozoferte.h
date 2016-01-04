@@ -17,7 +17,7 @@ class zlozOferte : public QDialog
     Q_OBJECT
 
 public:
-    void wez_dane_aukcji(QString nazwa_aukcji, QDateTime data_zak, QList<QString> kryteria);
+    void wez_dane_aukcji(QString nr_aukcji, QString nazwa_aukcji, QDateTime data_zak, QList<QString> kryteria);
     explicit zlozOferte(QWidget *parent = 0);
     ~zlozOferte();
 
@@ -28,6 +28,7 @@ private slots:
 
 private:
     Ui::zlozOferte *ui;
+    QString numer_aukcji;
     void przygotuj();
 };
 

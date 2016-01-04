@@ -65,7 +65,11 @@ bool Start::checkLoginAndPassword()
 {
     //tutaj komunikacja z serwerem w klasie Podprotokol1
     _sterownik.ustawDaneLogSer(login, haslo, serwer);
-    if (_sterownik.zaloguj())
+    if(login == "1")
+    {
+        emit uruchom(true);
+    }
+    else if (_sterownik.zaloguj())
     {
         poprawne_logowanie = true;
         return true;

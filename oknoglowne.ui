@@ -38,7 +38,7 @@
       <x>284</x>
       <y>41</y>
       <width>811</width>
-      <height>581</height>
+      <height>391</height>
      </rect>
     </property>
     <property name="font">
@@ -128,6 +128,16 @@
     </property>
     <property name="text">
      <string>Wybierz zwycięzcę</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEdit">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>440</y>
+      <width>811</width>
+      <height>181</height>
+     </rect>
     </property>
    </widget>
   </widget>

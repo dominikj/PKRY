@@ -15,20 +15,28 @@
 QString OknoGlowne::ZMIENNA_ODSWIEZ = "ODŚWIEŻ...";
 QString OknoGlowne::nr_aktywnej_aukcji = "0";
 
-OknoGlowne::OknoGlowne(QWidget *parent, Sterownik &ster) :
+OknoGlowne::OknoGlowne(QWidget *parent, Sterownik &ster, Start& st) :
     QMainWindow(parent),
     ui(new Ui::OknoGlowne),
-    _sterownik(ster)
+    _sterownik(ster),
+    _start(st)
 {
     ui->setupUi(this);
+    connect(&_start,SIGNAL(uruchom(bool)),this,SLOT(uruchom(bool)));
     QList<QString> listaAukcji;
     pierwsze_miejsce_na_liscie_odswieza_liste_aukcji();
-    zapelnij_liste_aukcji();
+    QString test = "nr_aukcji=101;nazwa=Test struktury aukcji;opis=Ten przetarg ma za zadanie sprawdzic, czy taka struktura danych moze bezbolesnie istniec. Lorem ipsum, costam costam.;data_roz=03:01:2016 18:26:35;data_zak=03:01:2016 18:31:35;kryteria={uroda,wdziek,powab,sila,masa,biala,rasa,dobre uczynnki,bicek,kolor,folklor,ksztalt,zapach}::nr_aukcji=291;nazwa=Budowa mostu Krasińskiego;opis=Budowa mostu Krasińskiego. Cena 90%, liczba ofert 5%, czas 5%.;data_roz=03:01:2016 18:26:35;data_zak=03:02:2016 18:31:35;kryteria={cena,liczba ofert w ostatnich dwóch latach,czas wykonania}";
+    zapelnij_liste_aukcji(test);
 }
 
 OknoGlowne::~OknoGlowne()
 {
     delete ui;
+}
+
+void OknoGlowne::uruchom(bool t)
+{
+    this->show();
 }
 
 void OknoGlowne::pierwsze_miejsce_na_liscie_odswieza_liste_aukcji()
@@ -41,30 +49,22 @@ void OknoGlowne::pierwsze_miejsce_na_liscie_odswieza_liste_aukcji()
     ui->listWidget->item(0)->setTextColor(QColor(0,75,200));
 }
 
-void OknoGlowne::zapelnij_liste_aukcji()
+void OknoGlowne::zapelnij_liste_aukcji(QString lista_aukcji)
 {
     /*!
      * Zapełnia listę dostępnych aukcji na podstawie danych pobranych z GAPa.
+     *
+     *
      */
-//    for(int i = 0; i < 5; i++)
-//    {
-//        ui->listWidget->addItem("Aukcja numer " + QString::number(i));
-//    }
-//  test_start
-    QString test = "nazwa=Test struktury aukcji;opis=Ten przetarg ma za zadanie sprawdzic, czy taka struktura danych moze bezbolesnie istniec. Lorem ipsum, costam costam.;data_roz=03:01:2016 18:26:35;data_zak=03:01:2016 18:31:35;kryteria={uroda,wdziek,powab,sila,masa,biala,rasa,dobre uczynnki,bicek,kolor,folklor,ksztalt,zapach}";
-    polaAukcji stuk = konwertuj_do_struktury(test);
-    stuk.numer_aukcji = "70088010";
-    //listaAktywnychAukcji.append(stuk);
-    bazaAktywnychAukcji.insert(stuk.numer_aukcji,stuk);
-//  test_end
-//    for(int i = 0; i < listaAktywnychAukcji.count();i++)
-//    {
+    QStringList aukcje_lista = lista_aukcji.split("::");
+    for(int i = 0; i < aukcje_lista.count(); i++)
+    {
+        polaAukcji stuk = konwertuj_do_struktury(aukcje_lista[i]);
+        bazaAktywnychAukcji.insert(stuk.numer_aukcji,stuk);
         QString wpis;
-        //bazaAktywnychAukcji.find(stuk.numer_aukcji);
         wpis = "(" + stuk.numer_aukcji + ") " + bazaAktywnychAukcji.value(stuk.numer_aukcji).nazwa_aukcji;
-        //wpis = "(" + listaAktywnychAukcji[i].numer_aukcji + ")" + " " +listaAktywnychAukcji[i].nazwa_aukcji;
         ui->listWidget->addItem(wpis);
-//    }
+    }
 }
 
 OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
@@ -74,7 +74,11 @@ OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
     for(int j = 0; j < cieta_struktura.count(); j++)
     {
         QStringList cieta_pozycja = cieta_struktura[j].split("=");
-        if(cieta_pozycja[0] == "nazwa")
+        if (cieta_pozycja[0] == "nr_aukcji")
+        {
+            struktura.numer_aukcji = cieta_pozycja[1];
+        }
+        else if(cieta_pozycja[0] == "nazwa")
         {
             struktura.nazwa_aukcji = cieta_pozycja[1];
         }
@@ -105,6 +109,7 @@ OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
 
 void OknoGlowne::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 {
+    ui->plainTextEdit->clear();
     if(item->text() == OknoGlowne::ZMIENNA_ODSWIEZ)
     {
         //odswiez_liste_aukcji();
@@ -163,7 +168,7 @@ void OknoGlowne::on_pushButton_clicked()
     {
         oknooferty = new zlozOferte();
         polaAukcji test = bazaAktywnychAukcji.value(OknoGlowne::nr_aktywnej_aukcji);
-        oknooferty->wez_dane_aukcji(test.nazwa_aukcji,test.data_zakonczenia,test.lista_kryteriow);
+        oknooferty->wez_dane_aukcji(test.numer_aukcji,test.nazwa_aukcji,test.data_zakonczenia,test.lista_kryteriow);
         oknooferty->setModal(true);
         oknooferty->exec();
     }

@@ -64,6 +64,11 @@ WybierzZwyciezce::~WybierzZwyciezce()
 void WybierzZwyciezce::on_pushButton_clicked()
 {
     QString zwycieza = ui->comboBox->currentText();
+    QString oferty_wziete_pod_uwage;
+    for (int i = 0; i < lista_numerow_oferentow.count(); i++)
+    {
+        oferty_wziete_pod_uwage = oferty_wziete_pod_uwage + ", " + lista_numerow_oferentow[i];
+    }
     QMessageBox::critical(this,"zwyciezca",zwycieza);
     this->close();
 }

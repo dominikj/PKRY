@@ -5,10 +5,10 @@
 class Sterownik;
 class GUI
 {
+
 public:
-    GUI(Sterownik& ster) : _sterownik(ster), _logowanie(0,ster), _oknoglowne(0,ster){}
-    void uruchom(){ //_logowanie.show();
-                  _oknoglowne.show();}
+    GUI(Sterownik& ster) : _sterownik(ster), _logowanie(0,ster), _oknoglowne(0,ster,_logowanie){}
+    void uruchom();
 private:
     Start _logowanie;
     OknoGlowne _oknoglowne;
