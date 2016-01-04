@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QCoreApplication>
+#include <QMessageBox>
 
 zlozOferte::zlozOferte(QWidget *parent) :
     QDialog(parent),
@@ -42,4 +43,39 @@ zlozOferte::~zlozOferte()
 void zlozOferte::on_pushButton_2_clicked()
 {
     this->close();
+}
+
+void zlozOferte::on_pushButton_clicked()
+{
+    bool czy_wszystko_wpisane = true;
+    QString oferta;
+    int liczba_wierszy = ui->tableWidget->rowCount();
+    for(int i = 0; i < liczba_wierszy; i++)
+    {
+        QTableWidgetItem *item = ui->tableWidget->item(i,1);
+        if(item == 0)
+        {
+            QString alert = "Nie wpisano wartości dla kryterium nr " + QString::number(i+1);
+            QMessageBox::critical(this,"Oj",alert);
+            czy_wszystko_wpisane = false;
+            break;
+        }
+    }
+    if(czy_wszystko_wpisane == true)
+    {
+        for(int i = 0; i < liczba_wierszy; i++){
+            if(i == liczba_wierszy-1)
+            {
+                oferta = oferta + ui->tableWidget->item(i,0)->text() + "=" + ui->tableWidget->item(i,1)->text();
+            }
+            else
+                oferta = oferta + ui->tableWidget->item(i,0)->text() + "=" + ui->tableWidget->item(i,1)->text() + "::";
+        }
+        /*
+         * W TYM MIEJSCU TRZEBA PRZEKAZAĆ DANE DO SERWERA I POCZEKAC, CZY NASZA OFERTA ZOSTAŁA PRZYJĘTA
+         * oferta - OFo podprotokol nr 3
+         */
+        //QMessageBox::critical(this,"Oj",oferta);
+        this->close();
+    }
 }
