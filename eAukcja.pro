@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     baza.cpp \
     gui.cpp \
     sterownik.cpp \
-    podprotokol.cpp
+    podprotokol.cpp \
+    zlozoferte.cpp
 
 HEADERS  += start.h \
     podprotokol1.h \
@@ -33,11 +34,13 @@ HEADERS  += start.h \
     baza.h \
     gui.h \
     sterownik.h \
-    podprotokol.h
+    podprotokol.h \
+    zlozoferte.h
 
 FORMS    += start.ui \
     oknoglowne.ui \
-    nowaaukcja.ui
+    nowaaukcja.ui \
+    zlozoferte.ui
 
 INCLUDEPATH += .
 INCLUDEPATH += /usr/include/botan-1.10/

@@ -6,13 +6,19 @@
 #include <QWidget>
 #include <QMessageBox>
 #include <QStringList>
+#include "zlozoferte.h"
+#include "tcp.h"
+#include "szyfrowanie.h"
+#include "sterownik.h"
 
 
 QString OknoGlowne::ZMIENNA_ODSWIEZ = "ODŚWIEŻ...";
+QString OknoGlowne::nr_aktywnej_aukcji = "0";
 
-OknoGlowne::OknoGlowne(QWidget *parent) :
+OknoGlowne::OknoGlowne(QWidget *parent, Sterownik &ster) :
     QMainWindow(parent),
-    ui(new Ui::OknoGlowne)
+    ui(new Ui::OknoGlowne),
+    _sterownik(ster)
 {
     ui->setupUi(this);
     QList<QString> listaAukcji;
@@ -45,18 +51,20 @@ void OknoGlowne::zapelnij_liste_aukcji()
 //        ui->listWidget->addItem("Aukcja numer " + QString::number(i));
 //    }
 //  test_start
-    QString test = "nazwa=Test struktury aukcji;opis=Ten przetarg ma za zadanie sprawdzic, czy taka struktura danych moze bezbolesnie istniec. Lorem ipsum, costam costam.;data_roz=03:01:2016 18:26:35;data_zak=03:01:2016 18:31:35;kryteria={uroda,wdziek,powab}";
+    QString test = "nazwa=Test struktury aukcji;opis=Ten przetarg ma za zadanie sprawdzic, czy taka struktura danych moze bezbolesnie istniec. Lorem ipsum, costam costam.;data_roz=03:01:2016 18:26:35;data_zak=03:01:2016 18:31:35;kryteria={uroda,wdziek,powab,sila,masa,biala,rasa,dobre uczynnki,bicek,kolor,folklor,ksztalt,zapach}";
     polaAukcji stuk = konwertuj_do_struktury(test);
     stuk.numer_aukcji = "70088010";
-    listaAktywnychAukcji.append(stuk);
-
+    //listaAktywnychAukcji.append(stuk);
+    bazaAktywnychAukcji.insert(stuk.numer_aukcji,stuk);
 //  test_end
-    for(int i = 0; i < listaAktywnychAukcji.count();i++)
-    {
+//    for(int i = 0; i < listaAktywnychAukcji.count();i++)
+//    {
         QString wpis;
-        wpis = "(" + listaAktywnychAukcji[i].numer_aukcji + ")" + " " +listaAktywnychAukcji[i].nazwa_aukcji;
+        //bazaAktywnychAukcji.find(stuk.numer_aukcji);
+        wpis = "(" + stuk.numer_aukcji + ") " + bazaAktywnychAukcji.value(stuk.numer_aukcji).nazwa_aukcji;
+        //wpis = "(" + listaAktywnychAukcji[i].numer_aukcji + ")" + " " +listaAktywnychAukcji[i].nazwa_aukcji;
         ui->listWidget->addItem(wpis);
-    }
+//    }
 }
 
 OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
@@ -104,18 +112,21 @@ void OknoGlowne::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     }
     else
     {
-        //to tylko test, tu bedzie metoda zeby po kliknieciu pokazywalo dane aukcji
-      ui->plainTextEdit->insertPlainText(listaAktywnychAukcji[0].nazwa_aukcji + "\n");
-      ui->plainTextEdit->insertPlainText(listaAktywnychAukcji[0].opis_aukcji + "\n");
-      ui->plainTextEdit->insertPlainText(listaAktywnychAukcji[0].data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + "\n");
-      ui->plainTextEdit->insertPlainText(listaAktywnychAukcji[0].data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + "\n");
-      foreach(QString kryt, listaAktywnychAukcji[0].lista_kryteriow)
+      QString nr_aukcji = item->text().mid(1,item->text().indexOf(")")-1);
+      OknoGlowne::nr_aktywnej_aukcji = nr_aukcji;
+      ui->plainTextEdit->insertPlainText("Nazwa aukcji: " + bazaAktywnychAukcji.value(nr_aukcji).nazwa_aukcji + "\n");
+      ui->plainTextEdit->insertPlainText("Opis aukcji: " + bazaAktywnychAukcji.value(nr_aukcji).opis_aukcji + "\n");
+      ui->plainTextEdit->insertPlainText("Data rozpoczęcia: " + bazaAktywnychAukcji.value(nr_aukcji).data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + "\n");
+      ui->plainTextEdit->insertPlainText("Data zakończenia: " + bazaAktywnychAukcji.value(nr_aukcji).data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + "\n");
+      ui->plainTextEdit->insertPlainText("Kryteria:");
+      ui->plainTextEdit->insertPlainText("\n");
+      foreach(QString kryt, bazaAktywnychAukcji.value(nr_aukcji).lista_kryteriow)
       {
-        ui->plainTextEdit->insertPlainText(kryt + " ");
+        ui->plainTextEdit->insertPlainText("*" + kryt + "\n");
       }
-      ui->plainTextEdit->insertPlainText("\n" + listaAktywnychAukcji[0].numer_aukcji);
+      ui->plainTextEdit->insertPlainText("\n");
+      ui->plainTextEdit->insertPlainText("Numer aukcji: " + bazaAktywnychAukcji.value(nr_aukcji).numer_aukcji);
     }
-
 }
 
 void OknoGlowne::on_pushButton_2_clicked()
@@ -141,4 +152,19 @@ void OknoGlowne::zlap_nowa_aukcje(polaAukcji pA)
     ui->plainTextEdit->insertPlainText(pA.nazwa_aukcji);
     ui->plainTextEdit->insertPlainText("\n");
     ui->plainTextEdit->insertPlainText(pA.opis_aukcji);
+}
+
+void OknoGlowne::on_pushButton_clicked()
+{
+    /*!
+     * Przygotowuje dialog z możliwością złożenia oferty
+     */
+    if(OknoGlowne::nr_aktywnej_aukcji != "0")
+    {
+        oknooferty = new zlozOferte();
+        polaAukcji test = bazaAktywnychAukcji.value(OknoGlowne::nr_aktywnej_aukcji);
+        oknooferty->wez_dane_aukcji(test.nazwa_aukcji,test.data_zakonczenia,test.lista_kryteriow);
+        oknooferty->setModal(true);
+        oknooferty->exec();
+    }
 }
