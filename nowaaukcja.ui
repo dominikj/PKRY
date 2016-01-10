@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Stwórz nowy przetarg</string>
   </property>
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
@@ -52,7 +52,7 @@
     <item row="1" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Nazwa aukcji:</string>
+       <string>Nazwa przetargu:</string>
       </property>
      </widget>
     </item>
@@ -62,7 +62,7 @@
     <item row="2" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Opis aukcji:</string>
+       <string>Opis przetargu:</string>
       </property>
      </widget>
     </item>
@@ -110,7 +110,7 @@
     <item row="0" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
-       <string>Numer aukcji:</string>
+       <string>Numer przetargu:</string>
       </property>
      </widget>
     </item>
@@ -150,12 +150,12 @@
     <rect>
      <x>20</x>
      <y>10</y>
-     <width>181</width>
+     <width>221</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Podaj dane tworzonej aukcji:</string>
+    <string>Podaj dane tworzonego przetargu:</string>
    </property>
   </widget>
  </widget>

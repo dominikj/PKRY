@@ -39,16 +39,18 @@ public:
     void odswiez_liste_aukcji();    //jakby coś miało się zmienić i trzeba było pobrać nową listę z GAPa
     ~OknoGlowne();
 
+signals:
+    void odpowiedz_serwera(QString odp, bool powodzenie);
+
 public slots:
     void zlap_nowa_aukcje(polaAukcji pA);
+    void zlap_nowa_oferte(QString of);
     void uruchom(bool t);
 
 private slots:
     void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
     void on_pushButton_2_clicked();
-
     void on_pushButton_clicked();
-
     void on_pushButton_3_clicked();
 
 private:
@@ -56,6 +58,7 @@ private:
     QList<QString> listaAukcji;
     QHash<QString, polaAukcji> bazaAktywnychAukcji;
     QList<polaAukcji> listaAktywnychAukcji; //pierwsze - nr aukcji, drugie - warunki aukcji
+    QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
     polaAukcji konwertuj_do_struktury(QString wpis);
     Sterownik& _sterownik;
     Start& _start;

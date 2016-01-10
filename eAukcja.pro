@@ -24,7 +24,10 @@ SOURCES += main.cpp\
     sterownik.cpp \
     podprotokol.cpp \
     zlozoferte.cpp \
-    wybierzzwyciezce.cpp
+    wybierzzwyciezce.cpp \
+    podprotokol2.cpp \
+    podprotokol3.cpp \
+    podprotokol4.cpp
 
 HEADERS  += start.h \
     podprotokol1.h \
@@ -37,7 +40,10 @@ HEADERS  += start.h \
     sterownik.h \
     podprotokol.h \
     zlozoferte.h \
-    wybierzzwyciezce.h
+    wybierzzwyciezce.h \
+    podprotokol2.h \
+    podprotokol3.h \
+    podprotokol4.h
 
 FORMS    += start.ui \
     oknoglowne.ui \

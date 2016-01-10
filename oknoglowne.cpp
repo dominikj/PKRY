@@ -157,6 +157,9 @@ void OknoGlowne::zlap_nowa_aukcje(polaAukcji pA)
     ui->plainTextEdit->insertPlainText(pA.nazwa_aukcji);
     ui->plainTextEdit->insertPlainText("\n");
     ui->plainTextEdit->insertPlainText(pA.opis_aukcji);
+    QString _nowaAukcja = przygotuj_dane_aukcji_do_wyslania(pA);
+    if(_sterownik.wykonajPodProt2(_nowaAukcja) == true)
+        QMessageBox::information(this,"OK","Aukcja dodana");
 }
 
 void OknoGlowne::on_pushButton_clicked()
@@ -170,8 +173,19 @@ void OknoGlowne::on_pushButton_clicked()
         polaAukcji test = bazaAktywnychAukcji.value(OknoGlowne::nr_aktywnej_aukcji);
         oknooferty->wez_dane_aukcji(test.numer_aukcji,test.nazwa_aukcji,test.data_zakonczenia,test.lista_kryteriow);
         oknooferty->setModal(true);
+        connect(oknooferty,SIGNAL(skladanie_oferty(QString)),this,SLOT(zlap_nowa_oferte(QString)));
+        connect(this,SIGNAL(odpowiedz_serwera(QString,bool)),oknooferty,SLOT(odpowiedz_od_serwera(QString,bool)));
         oknooferty->exec();
     }
+}
+
+void OknoGlowne::zlap_nowa_oferte(QString of)
+{
+    QMessageBox::critical(this,"Oj",of);
+
+    //tutaj przerzucic do sterownika i dalej
+    //if odpowiedz od serwera ok (albo nie)
+    emit odpowiedz_serwera("Nie zlozysz oferty serwerowi, ktorego nie ma.",false);
 }
 
 void OknoGlowne::on_pushButton_3_clicked()
@@ -179,4 +193,30 @@ void OknoGlowne::on_pushButton_3_clicked()
     wyborzwyciezcy = new WybierzZwyciezce();
     wyborzwyciezcy->setModal(true);
     wyborzwyciezcy->exec();
+}
+
+QString OknoGlowne::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
+{
+    /*!
+     * Wstępnie zwalidowane dane przygotowuje w postaci stringa do wysłania na serwer
+     * \brief wynik
+     */
+    QString wynik;
+    wynik = wynik + "nazwa=" + pA.nazwa_aukcji + ";";
+    wynik = wynik + "opis=" + pA.opis_aukcji + ";";
+    wynik = wynik + "data_roz=" + pA.data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
+    wynik = wynik + "data_zak=" + pA.data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
+    wynik = wynik + "kryteria={";
+    for(int i = 0; i < pA.lista_kryteriow.count();i++)
+    {
+        if (i == pA.lista_kryteriow.count()-1)
+        {
+            wynik = wynik + pA.lista_kryteriow[i];
+        }
+        else
+            wynik = wynik + pA.lista_kryteriow[i] + ",";
+    }
+    wynik = wynik + "}";
+    QMessageBox::critical(this,"Oj",wynik);
+    return wynik;
 }

@@ -2,6 +2,7 @@
 #define GUI_H
 #include "start.h"
 #include "oknoglowne.h"
+#include "wybierzzwyciezce.h"
 class Sterownik;
 class GUI
 {
@@ -12,6 +13,7 @@ public:
 private:
     Start _logowanie;
     OknoGlowne _oknoglowne;
+    WybierzZwyciezce *_wyborzwyciezcy;
     Sterownik& _sterownik;
 };
 

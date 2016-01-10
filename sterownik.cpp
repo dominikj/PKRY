@@ -29,6 +29,13 @@ bool Sterownik::zaloguj(){
 
 }
 
+bool Sterownik::wykonajPodProt2(QString _nowaAukcja)
+{
+    _podprot2 = new Podprotokol2(_szyfr, *_tcp, _baza);
+
+    //scal, podpisz, zaszyfruj, wyslij, dostan potwierdzenie i zwroc je
+}
+
 Sterownik::~Sterownik(){
     if (_podprot1 != nullptr)
         delete _podprot1;

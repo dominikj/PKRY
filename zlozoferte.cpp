@@ -77,7 +77,21 @@ void zlozOferte::on_pushButton_clicked()
          * W TYM MIEJSCU TRZEBA PRZEKAZAĆ DANE DO SERWERA I POCZEKAC, CZY NASZA OFERTA ZOSTAŁA PRZYJĘTA
          * oferta - OFo podprotokol nr 3
          */
-        QMessageBox::critical(this,"Oj",oferta);
+        //QMessageBox::critical(this,"Oj",oferta);
+        emit skladanie_oferty(oferta);
+//        this->close();
+    }
+}
+
+void zlozOferte::odpowiedz_od_serwera(QString odp, bool powodzenie)
+{
+    if(powodzenie == true)
+    {
         this->close();
     }
+    else
+    {
+        QMessageBox::critical(this,"Oj",odp);
+    }
+    //jak false to nie zamykaj i poinformuj o bledzie
 }

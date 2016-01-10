@@ -21,10 +21,13 @@ public:
     explicit zlozOferte(QWidget *parent = 0);
     ~zlozOferte();
 
+signals:
+    void skladanie_oferty(QString of);
+
 private slots:
     void on_pushButton_2_clicked();
-
     void on_pushButton_clicked();
+    void odpowiedz_od_serwera(QString odp, bool powodzenie);
 
 private:
     Ui::zlozOferte *ui;

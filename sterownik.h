@@ -1,6 +1,7 @@
 #ifndef STEROWNIK_H
 #define STEROWNIK_H
 #include "podprotokol1.h"
+#include "podprotokol2.h"
 #include "baza.h"
 #include "szyfrowanie.h"
 #include "tcp.h"
@@ -13,9 +14,11 @@ public:
     ~Sterownik();
     void przygotowanie();
     void ustawDaneLogSer(QString login, QString haslo, QString adres, int port = 10099);
+    bool wykonajPodProt2(QString _nowaAukcja);
     bool zaloguj();
 private:
  Podprotokol1* _podprot1 =nullptr;
+ Podprotokol2* _podprot2 =nullptr;
  GUI _gui;
  Baza _baza;
  Szyfrowanie _szyfr;

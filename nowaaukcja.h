@@ -26,6 +26,7 @@ public:
     polaAukcji pola_aukcji;
     explicit NowaAukcja(QWidget *parent = 0);
     void zwrocPola(QString &test);
+//    QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
     ~NowaAukcja();
 
 signals:
@@ -40,7 +41,6 @@ private slots:
 
 private:
     Ui::NowaAukcja *ui;
-    QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
 };
 
 #endif // NOWAAUKCJA_H
