@@ -14,28 +14,49 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     start.cpp \
+    podprotokol1.cpp \
+    oknoglowne.cpp \
+    nowaaukcja.cpp \
     tcp.cpp \
     szyfrowanie.cpp \
     baza.cpp \
     gui.cpp \
     sterownik.cpp \
-    podprotokol1.cpp \
-    podprotokol.cpp
+    podprotokol.cpp \
+    zlozoferte.cpp \
+    wybierzzwyciezce.cpp \
+    podprotokol2.cpp \
+    podprotokol3.cpp \
+    podprotokol4.cpp
 
 HEADERS  += start.h \
+    podprotokol1.h \
+    oknoglowne.h \
+    nowaaukcja.h \
     tcp.h \
     szyfrowanie.h \
     baza.h \
     gui.h \
     sterownik.h \
-    podprotokol1.h \
-    podprotokol.h
+    podprotokol.h \
+    zlozoferte.h \
+    wybierzzwyciezce.h \
+    podprotokol2.h \
+    podprotokol3.h \
+    podprotokol4.h
 
-FORMS    += start.ui
+FORMS    += start.ui \
+    oknoglowne.ui \
+    nowaaukcja.ui \
+    zlozoferte.ui \
+    wybierzzwyciezce.ui
 
 INCLUDEPATH += .
 INCLUDEPATH += /usr/include/botan-1.10/
 LIBS += -lbotan-1.10
 #LIBPATH += /root/Pobrane/Botan/
 CONFIG += c++11
+
+DISTFILES += \
+    struktury
 

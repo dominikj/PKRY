@@ -5,6 +5,10 @@
 #include "tcp.h"
 #include "szyfrowanie.h"
 #include "sterownik.h"
+
+bool Start::poprawne_logowanie = false;
+
+
 Start::Start(QWidget *parent, Sterownik& ster) :
     QMainWindow(parent),
     ui(new Ui::Start),
@@ -42,7 +46,11 @@ void Start::on_pushButton_clicked()
     serwer = ui->lineEdit_3->text();
 
     if(checkLoginAndPassword() == true)
+    {
         std::cout << "good";
+
+        this->close();
+    }
     else
     {
 //        QMessageBox msgBox;
@@ -55,8 +63,16 @@ void Start::on_pushButton_clicked()
 
 bool Start::checkLoginAndPassword()
 {
+    //tutaj komunikacja z serwerem w klasie Podprotokol1
     _sterownik.ustawDaneLogSer(login, haslo, serwer);
-    if (_sterownik.zaloguj())
+    if(login == "1")
+    {
+        emit uruchom(true);
+    }
+    else if (_sterownik.zaloguj())
+    {
+        poprawne_logowanie = true;
         return true;
+    }
     else return false;
 }
