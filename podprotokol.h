@@ -3,6 +3,9 @@
 #include "szyfrowanie.h"
 #include "tcp.h"
 #include "baza.h"
+#include <QString>
+#include <QByteArray>
+#include <QDebug>
 class Podprotokol //klasa abstrakcyjna
 {
 public:
@@ -10,7 +13,7 @@ public:
     virtual ~Podprotokol(){}
 
     virtual bool wykonaj() = 0;  // W tym operacje podprotokołu
-private:
+protected:
     Szyfrowanie& _szyfrowanie;
     Tcp& _tcp;
     Baza& _baza;

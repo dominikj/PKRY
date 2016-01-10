@@ -3,10 +3,18 @@
 
 Szyfrowanie::Szyfrowanie()
 {
+    return;
+    X509_PublicKey* p =X509::load_key("skcca");
+    QString s;
+    s.fromStdString(
+    (X509::PEM_encode(*p))
+                );
+    qDebug() << s;
+
 }
 Klucze Szyfrowanie::generujKlucze(){
     AutoSeeded_RNG rand;
-    RSA_PrivateKey klucz(rand, 1024);
+    RSA_PrivateKey klucz(rand, 2048);
     QString pub = QString::fromStdString(X509::PEM_encode(klucz));
     QString priv = QString::fromStdString(PKCS8::PEM_encode(klucz));
     Klucze klucze = {pub, priv};
