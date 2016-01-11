@@ -9,8 +9,9 @@
 #include "gui/gui.h"
 #include "sterownik/oczekujzwyciezcy.h"
 #include "utils/proxytcp.h"
-class Sterownik
+class Sterownik : public QObject
 {
+    Q_OBJECT
 public:
     Sterownik();
     ~Sterownik();
@@ -20,6 +21,13 @@ public:
     bool zaloguj();
     QString pobierzAukcje();
     OczekujZwyciezcy *czekajNaZwyciezce();
+    Tcp* _tcp = nullptr;
+public slots:
+    void wez_dane_zwyciezcy(QString zwyciezca, QString inni);
+
+signals:
+    void odpowiedz_serwera(QString odp);
+
 private:
  Podprotokol1* _podprot1 =nullptr;
  Podprotokol2* _podprot2 =nullptr;
@@ -28,7 +36,7 @@ private:
  GUI _gui;
  Baza _baza;
  Szyfrowanie _szyfr;
- Tcp* _tcp = nullptr;
+    //tu byl Tcp*
  int _port = 10099;
  QString _adres = "127.0.0.1";
 };

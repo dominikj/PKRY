@@ -7,8 +7,8 @@ WybierzZwyciezce::WybierzZwyciezce(QWidget *parent) :
     ui(new Ui::WybierzZwyciezce)
 {
     ui->setupUi(this);
-    przekaz_liste_ofert("nr_aukcji=1111::{nr_oferenta=2222;nr_oferty=3333;kryt1=wart1;kryt2=wart2}::{nr_oferenta=4444;nr_oferty=5555;kryt1=wart3;kryt2=wart4}");
-    wyswietl_oferty();
+    //przekaz_liste_ofert("nr_aukcji=1111::{nr_oferenta=2222;nr_oferty=3333;kryt1=wart1;kryt2=wart2}::{nr_oferenta=4444;nr_oferty=5555;kryt1=wart3;kryt2=wart4}");
+    //wyswietl_oferty();
 }
 
 //Postać stringa od GAPa:
@@ -69,6 +69,22 @@ void WybierzZwyciezce::on_pushButton_clicked()
     {
         oferty_wziete_pod_uwage = oferty_wziete_pod_uwage + ", " + lista_numerow_oferentow[i];
     }
-    QMessageBox::critical(this,"zwyciezca",zwycieza);
+    QMessageBox::information(this,"zwyciezca",zwycieza);
+    emit info_dla_sterownika(zwycieza,oferty_wziete_pod_uwage);
+    //this->close();
+}
+
+void WybierzZwyciezce::wyswietl_okno(QString dane)
+{
+    this->przekaz_liste_ofert(dane);
+    this->wyswietl_oferty();
+    this->show();
+}
+
+void WybierzZwyciezce::odpowiedz_serwera(QString odpowiedz)
+{
+    //JEŚLI SERWER MÓWI OK, TO ZAMYKAMY
+    //JEŚLI SERWER MÓWI, ŻE NIE OK TO WRZUCAMY MESSAGEBOKSA
+    //ALE NA RAZIE SERWER NIE ISTNIEJE
     this->close();
 }

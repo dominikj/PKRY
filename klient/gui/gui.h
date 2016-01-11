@@ -10,10 +10,11 @@ class GUI
 public:
     GUI(Sterownik& ster) : _sterownik(ster), _logowanie(0,ster), _oknoglowne(0,ster,_logowanie){}
     void uruchom();
+    WybierzZwyciezce *_wyborzwyciezcy;
+
 private:
     Start _logowanie;
     OknoGlowne _oknoglowne;
-    WybierzZwyciezce *_wyborzwyciezcy;
     Sterownik& _sterownik;
 };
 
