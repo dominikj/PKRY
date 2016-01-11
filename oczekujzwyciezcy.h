@@ -2,7 +2,7 @@
 #define OCZEKUJZWYCIEZCY_H
 
 #include <QObject>
-#include "utils/tcp.h"
+#include "tcp.h"
 
 class OczekujZwyciezcy : public QObject
 {
