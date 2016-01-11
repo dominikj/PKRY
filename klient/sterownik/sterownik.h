@@ -1,12 +1,14 @@
 #ifndef STEROWNIK_H
 #define STEROWNIK_H
-#include "podprotokol1.h"
-#include "podprotokol2.h"
-#include "baza.h"
-#include "szyfrowanie.h"
-#include "tcp.h"
-#include "gui.h"
-
+#include "podprotokoly/podprotokol1.h"
+#include "podprotokoly/podprotokol2.h"
+#include "podprotokoly/podprotokol3.h"
+#include "podprotokoly/podprotokol4.h"
+#include "utils/baza.h"
+#include "utils/szyfrowanie.h"
+#include "gui/gui.h"
+#include "sterownik/oczekujzwyciezcy.h"
+#include "utils/proxytcp.h"
 class Sterownik
 {
 public:
@@ -16,9 +18,13 @@ public:
     void ustawDaneLogSer(QString login, QString haslo, QString adres, int port = 10099);
     bool wykonajPodProt2(QString _nowaAukcja);
     bool zaloguj();
+    QString pobierzAukcje();
+    OczekujZwyciezcy *czekajNaZwyciezce();
 private:
  Podprotokol1* _podprot1 =nullptr;
  Podprotokol2* _podprot2 =nullptr;
+ Podprotokol3* _podprot3 =nullptr;
+ Podprotokol4* _podprot4 =nullptr;
  GUI _gui;
  Baza _baza;
  Szyfrowanie _szyfr;

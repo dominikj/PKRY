@@ -16,7 +16,7 @@ public:
     QString odbierz();
     void zamknij();
 
-private:
+protected:
     int _port;
     QString _adres;
     QTcpSocket * _gniazdo;

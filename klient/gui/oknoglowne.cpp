@@ -7,9 +7,9 @@
 #include <QMessageBox>
 #include <QStringList>
 #include "zlozoferte.h"
-#include "tcp.h"
-#include "szyfrowanie.h"
-#include "sterownik.h"
+#include "utils/tcp.h"
+#include "utils/szyfrowanie.h"
+#include "sterownik/sterownik.h"
 
 
 QString OknoGlowne::ZMIENNA_ODSWIEZ = "ODŚWIEŻ...";
