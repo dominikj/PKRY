@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     podprotokoly/podprotokol3.cpp \
     podprotokoly/podprotokol4.cpp \
     sterownik/oczekujzwyciezcy.cpp \
-    sterownik/sterownik.cpp
+    sterownik/sterownik.cpp \
+    utils/proxytcp.cpp
 
 HEADERS  += gui/start.h \
     podprotokoly/podprotokol1.h \
@@ -45,7 +46,8 @@ HEADERS  += gui/start.h \
     podprotokoly/podprotokol3.h \
     podprotokoly/podprotokol4.h \
     sterownik/oczekujzwyciezcy.h \
-    sterownik/sterownik.h
+    sterownik/sterownik.h \
+    utils/proxytcp.h
 
 FORMS    += gui/start.ui \
     gui/oknoglowne.ui \

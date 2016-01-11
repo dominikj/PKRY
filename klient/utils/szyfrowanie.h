@@ -5,7 +5,8 @@
 #include <botan/botan.h>
 #include <botan/rsa.h>
 #include <botan/look_pk.h>
-
+#define KLUCZ_ROZM 2048
+#define MAX_WIAD_ROZM 215
 using namespace Botan;
 
 struct Klucze{

@@ -14,7 +14,7 @@ Szyfrowanie::Szyfrowanie()
 }
 Klucze Szyfrowanie::generujKlucze(){
     AutoSeeded_RNG rand;
-    RSA_PrivateKey klucz(rand, 2048);
+    RSA_PrivateKey klucz(rand, KLUCZ_ROZM);
     QString pub = QString::fromStdString(X509::PEM_encode(klucz));
     QString priv = QString::fromStdString(PKCS8::PEM_encode(klucz));
     Klucze klucze = {pub, priv};

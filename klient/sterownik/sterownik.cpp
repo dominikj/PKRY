@@ -15,7 +15,7 @@ void Sterownik::ustawDaneLogSer(QString login, QString haslo, QString adres, int
 
 void Sterownik::przygotowanie(){
     // TODO: zabezpieczyć przed potencjalnym wyciekiem pamięci, przejść np. na wake_ptr
-    _tcp = new Tcp(_port, _adres);
+    _tcp = new ProxyTcp(_port, _adres,_szyfr);
     _podprot1 = new Podprotokol1(_szyfr,*_tcp,_baza);
 }
 

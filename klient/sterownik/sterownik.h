@@ -6,9 +6,9 @@
 #include "podprotokoly/podprotokol4.h"
 #include "utils/baza.h"
 #include "utils/szyfrowanie.h"
-#include "utils/tcp.h"
 #include "gui/gui.h"
 #include "sterownik/oczekujzwyciezcy.h"
+#include "utils/proxytcp.h"
 class Sterownik
 {
 public:
