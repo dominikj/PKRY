@@ -21,13 +21,14 @@ SOURCES += main.cpp\
     szyfrowanie.cpp \
     baza.cpp \
     gui.cpp \
-    sterownik.cpp \
     podprotokol.cpp \
     zlozoferte.cpp \
     wybierzzwyciezce.cpp \
     podprotokol2.cpp \
     podprotokol3.cpp \
-    podprotokol4.cpp
+    podprotokol4.cpp \
+    sterownik/oczekujzwyciezcy.cpp \
+    sterownik/sterownik.cpp
 
 HEADERS  += start.h \
     podprotokol1.h \
@@ -37,13 +38,14 @@ HEADERS  += start.h \
     szyfrowanie.h \
     baza.h \
     gui.h \
-    sterownik.h \
     podprotokol.h \
     zlozoferte.h \
     wybierzzwyciezce.h \
     podprotokol2.h \
     podprotokol3.h \
-    podprotokol4.h
+    podprotokol4.h \
+    sterownik/oczekujzwyciezcy.h \
+    sterownik/sterownik.h
 
 FORMS    += start.ui \
     oknoglowne.ui \

@@ -1,6 +1,6 @@
 #include "start.h"
 #include "oknoglowne.h"
-#include "sterownik.h"
+#include "sterownik/sterownik.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

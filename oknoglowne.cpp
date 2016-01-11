@@ -9,7 +9,7 @@
 #include "zlozoferte.h"
 #include "tcp.h"
 #include "szyfrowanie.h"
-#include "sterownik.h"
+#include "sterownik/sterownik.h"
 
 
 QString OknoGlowne::ZMIENNA_ODSWIEZ = "ODŚWIEŻ...";
