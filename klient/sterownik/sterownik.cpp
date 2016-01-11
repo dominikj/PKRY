@@ -57,7 +57,7 @@ OczekujZwyciezcy* Sterownik::czekajNaZwyciezce(){
 void Sterownik::wez_dane_zwyciezcy(QString zwyciezca, QString inni)
 {
     //TODO: te dane wyzej wysylamy GAPowi
-    //CZEKAMY NA ODPOWIEDZ
+    //CZEKAMY NA ODPOWIEDZ I
     //ODPOWIADAMY OKIENKU
     QString odp = "";
     emit odpowiedz_serwera(odp);
