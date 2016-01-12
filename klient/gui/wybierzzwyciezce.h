@@ -17,6 +17,13 @@ public:
     void przekaz_liste_ofert(QString string_lista_ofert);
     ~WybierzZwyciezce();
 
+signals:
+    void info_dla_sterownika(QString zwyciezca, QString wzieci_pod_uwage);
+
+public slots:
+    void wyswietl_okno(QString dane);
+    void odpowiedz_serwera(QString odpowiedz);
+
 private slots:
     void on_pushButton_clicked();
 

@@ -46,6 +46,7 @@ public slots:
     void zlap_nowa_aukcje(polaAukcji pA);
     void zlap_nowa_oferte(QString of);
     void uruchom(bool t);
+    void wybierz_zwyciezce_wyswietl_okno(QString wZ);
 
 private slots:
     void on_listWidget_itemDoubleClicked(QListWidgetItem *item);

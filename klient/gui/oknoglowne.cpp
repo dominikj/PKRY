@@ -112,8 +112,13 @@ void OknoGlowne::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     ui->plainTextEdit->clear();
     if(item->text() == OknoGlowne::ZMIENNA_ODSWIEZ)
     {
-        //odswiez_liste_aukcji();
-        ui->plainTextEdit->insertPlainText("Działa");
+//        try{
+//            zapelnij_liste_aukcji(_sterownik.pobierzAukcje());
+//        }
+//        catch(...)
+//        {
+//            QMessageBox::critical(this,"Ojoj","Prawdopodobnie brak połączenia :(");
+//        }
     }
     else
     {
@@ -219,4 +224,11 @@ QString OknoGlowne::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
     wynik = wynik + "}";
     QMessageBox::critical(this,"Oj",wynik);
     return wynik;
+}
+
+void OknoGlowne::wybierz_zwyciezce_wyswietl_okno(QString wZ)
+{
+    wyborzwyciezcy = new WybierzZwyciezce();
+    wyborzwyciezcy->setModal(true);
+    wyborzwyciezcy->exec();
 }
