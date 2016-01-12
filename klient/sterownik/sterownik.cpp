@@ -45,16 +45,11 @@ QString Sterownik::pobierzAukcje(){
 
 OczekujZwyciezcy* Sterownik::czekajNaZwyciezce(){
     OczekujZwyciezcy* czekZw = new OczekujZwyciezcy(_tcp);
-<<<<<<< HEAD
+
     QObject::connect(_tcp->gniazdo(),SIGNAL(readyRead()),czekZw,SLOT(czekajZwyciezcy()));
-=======
-    //JESTEM PRZEKONANY, ŻE TO JEST ZUPEŁNIE NIE ZGODNE Z FILOZOFIĄ MVC ALE NIE BARDZO UMIEM INACZEJ
-    //TYLE DOBRZE, ŻE CHYBA POWINNO DZIAŁAĆ
-    QObject::connect(_tcp,SIGNAL(readyRead()),czekZw,SLOT(czekajZwyciezcy()));
     QObject::connect(czekZw,SIGNAL(alertZwyciezca(QString)),_gui._wyborzwyciezcy,SLOT(wyswietl_okno(QString)));
     QObject::connect(_gui._wyborzwyciezcy,SIGNAL(info_dla_sterownika(QString,QString)),this,SLOT(wez_dane_zwyciezcy(QString,QString)));
     QObject::connect(this,SIGNAL(odpowiedz_serwera(QString)),_gui._wyborzwyciezcy,SLOT(odpowiedz_serwera(QString)));
->>>>>>> 4a9949392953c02d1540eb2c02ef33a4f35fac20
     return czekZw;
 }
 
