@@ -27,7 +27,7 @@ bool Podprotokol1::wykonaj(){
     QString Dc = "USER=" + _baza.nazwaUzytkownika + " PASSWD=" + _baza.haslo + " ";
    QString podpis = _szyfrowanie.podpisz(_baza.SKcca, Dc.toLatin1());
     Dc += podpis;
-    QString daneDoWyslania = _szyfrowanie.szyfruj(_baza.kluczGAP,Dc.toLatin1());
+    QString daneDoWyslania = _szyfrowanie.szyfruj(_baza.kluczGAPPrywatny,Dc.toLatin1());
     qDebug() << daneDoWyslania;
    // _tcp.wyslij(daneDoWyslania.toLatin1());
 
@@ -37,7 +37,7 @@ bool Podprotokol1::wykonaj(){
    QStringList tmp =pola.at(1).split("=");
    if(tmp.at(0) == "SKGAP")
        podpis = tmp.at(1);
-    if (_szyfrowanie.sprawdzPodpis(_baza.kluczGAP,podpis.toLatin1(),pola.at(0).toLatin1())){
+    if (_szyfrowanie.sprawdzPodpis(_baza.kluczGAPPrywatny,podpis.toLatin1(),pola.at(0).toLatin1())){
         // zapis pól
     }
 

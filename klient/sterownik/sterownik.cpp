@@ -20,11 +20,11 @@ void Sterownik::przygotowanie(){
 }
 
 bool Sterownik::zaloguj(){
-   //FIXME: if (_tcp->polacz()){
+   if (_tcp->polacz()){
         _podprot1->wykonaj();
-    //    return true;
-   // }
- //   else return false;
+        return true;
+   }
+   else return false;
 
 
 }

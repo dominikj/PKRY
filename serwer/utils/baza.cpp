@@ -6,7 +6,7 @@
 Baza::Baza()
 {
  QFile skcca("skcca");
- QFile gap("gap");
+ QFile gap("gapPriv");
     if (skcca.open(QIODevice::ReadOnly)) {
            QDataStream wejscie(&skcca);
            QByteArray klucz;
@@ -23,13 +23,13 @@ Baza::Baza()
            while (!gap.atEnd()) {
                wejscie >> klucz;
            }
-         kluczGAP = QByteArray::fromBase64(klucz);
+         kluczGAPPrywatny = QByteArray::fromBase64(klucz);
           }
 
 
 
     //qDebug() << SKcca;
-   // qDebug() << kluczGAP;
+    qDebug() << kluczGAPPrywatny;
    gap.close();
     skcca.close();
 }

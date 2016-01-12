@@ -13,47 +13,33 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    gui/start.cpp \
     podprotokoly/podprotokol1.cpp \
-    gui/oknoglowne.cpp \
-    gui/nowaaukcja.cpp \
     utils/tcp.cpp \
     utils/szyfrowanie.cpp \
     utils/baza.cpp \
-    gui/gui.cpp \
     podprotokoly/podprotokol.cpp \
-    gui/zlozoferte.cpp \
-    gui/wybierzzwyciezce.cpp \
     podprotokoly/podprotokol2.cpp \
     podprotokoly/podprotokol3.cpp \
     podprotokoly/podprotokol4.cpp \
-    sterownik/oczekujzwyciezcy.cpp \
     sterownik/sterownik.cpp \
-    utils/proxytcp.cpp
+    utils/proxytcp.cpp \
+    utils/tcpserwer.cpp \
+    utils/uzytkownik.cpp
 
-HEADERS  += gui/start.h \
-    podprotokoly/podprotokol1.h \
-    gui/oknoglowne.h \
-    gui/nowaaukcja.h \
+HEADERS  += podprotokoly/podprotokol1.h \
     utils/tcp.h \
     utils/szyfrowanie.h \
     utils/baza.h \
-    gui/gui.h \
     podprotokoly/podprotokol.h \
-    gui/zlozoferte.h \
-    gui/wybierzzwyciezce.h \
     podprotokoly/podprotokol2.h \
     podprotokoly/podprotokol3.h \
     podprotokoly/podprotokol4.h \
-    sterownik/oczekujzwyciezcy.h \
     sterownik/sterownik.h \
-    utils/proxytcp.h
+    utils/proxytcp.h \
+    utils/tcpserwer.h \
+    utils/uzytkownik.h
 
-FORMS    += gui/start.ui \
-    gui/oknoglowne.ui \
-    gui/nowaaukcja.ui \
-    gui/zlozoferte.ui \
-    gui/wybierzzwyciezce.ui
+#FORMS    += gui/start.ui \
 
 INCLUDEPATH += .
 INCLUDEPATH += /usr/include/botan-1.10/

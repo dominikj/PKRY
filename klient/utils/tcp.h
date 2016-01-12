@@ -13,7 +13,7 @@ public:
     }
     bool polacz();
     void wyslij(QByteArray);
-    QString odbierz();
+    QByteArray odbierz();
     void zamknij();
     QTcpSocket* const gniazdo() const { return _gniazdo;}
 protected:

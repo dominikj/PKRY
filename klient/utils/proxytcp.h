@@ -7,7 +7,7 @@ class ProxyTcp : public Tcp
 {
 public:
     ProxyTcp(int port, QString adres, Szyfrowanie& szyfr) :  Tcp(port,adres), _szyfr(szyfr){}
-    void wyslijSzyfrowane(QString klucz, QString dane);
+    void wyslijSzyfrowane(QString klucz, QByteArray dane);
     QString odbierzSzyfrowane(QString klucz);
 
 private:

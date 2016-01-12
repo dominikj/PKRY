@@ -19,8 +19,8 @@ void Tcp::wyslij(QByteArray dane){
 _gniazdo->write(dane);
 }
 
-QString Tcp::odbierz(){
-    _gniazdo->waitForReadyRead();
+QByteArray Tcp::odbierz(){
+    _gniazdo->waitForReadyRead(200);
     return _gniazdo->readAll();
 }
 

@@ -28,8 +28,8 @@ Baza::Baza()
 
 
 
-    //qDebug() << SKcca;
-   // qDebug() << kluczGAP;
+    qDebug() << SKcca;
+    qDebug() << kluczGAP;
    gap.close();
     skcca.close();
 }

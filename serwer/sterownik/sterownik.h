@@ -6,31 +6,35 @@
 #include "podprotokoly/podprotokol4.h"
 #include "utils/baza.h"
 #include "utils/szyfrowanie.h"
-#include "gui/gui.h"
-#include "sterownik/oczekujzwyciezcy.h"
 #include "utils/proxytcp.h"
-class Sterownik
+#include "utils/uzytkownik.h"
+#include <deque>
+#include "utils/tcpserwer.h"
+
+typedef std::deque<Uzytkownik*>::iterator UzytkIt;
+typedef std::deque<Uzytkownik*> UzytkLista;
+
+class Sterownik : public QObject
 {
+    Q_OBJECT
 public:
-    Sterownik();
-    ~Sterownik();
-    void przygotowanie();
-    void ustawDaneLogSer(QString login, QString haslo, QString adres, int port = 10099);
-    bool wykonajPodProt2(QString _nowaAukcja);
-    bool zaloguj();
-    QString pobierzAukcje();
-    OczekujZwyciezcy *czekajNaZwyciezce();
+    explicit Sterownik(QObject *parent = 0){
+        _serw = new TcpSerwer (listaUzytkownikow, 10099,this, _szyfr,0);
+    }
+
+public slots:
+void koniecPoloczenia(Uzytkownik*);
+void przyszlyDane(Uzytkownik*);
+
 private:
  Podprotokol1* _podprot1 =nullptr;
  Podprotokol2* _podprot2 =nullptr;
  Podprotokol3* _podprot3 =nullptr;
  Podprotokol4* _podprot4 =nullptr;
- GUI _gui;
  Baza _baza;
  Szyfrowanie _szyfr;
- Tcp* _tcp = nullptr;
- int _port = 10099;
- QString _adres = "127.0.0.1";
+TcpSerwer* _serw;
+UzytkLista listaUzytkownikow;
 };
 
 #endif // STEROWNIK_H
