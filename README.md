@@ -1,5 +1,5 @@
 # PKRY
 ## Projekt przetargu elektornicznego
-Autorzy: 
-Dominik Januszewicz 
+Autorzy:   
+Dominik Januszewicz   
 Paweł Klimczuk
