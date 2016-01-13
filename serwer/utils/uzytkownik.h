@@ -26,6 +26,14 @@ private:
 public:
   unsigned int numerWew; // Nie zmieniać!
 
+  QByteArray PKc;
+  QString nazwa = "";
+
+  QString numerRejestracyjny; // NRc
+  QByteArray kluczPubliczny; //PKc
+  QByteArray KluczPrywatny; //SKc
+  QString czasWygenKluczy; //TNRc
+
 
  // Pola dla użytkownika, klucze, dane itp.
 };

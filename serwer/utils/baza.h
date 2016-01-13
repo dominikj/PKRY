@@ -2,21 +2,18 @@
 #define BAZA_H
 #include <botan/botan.h>
 #include <QString>
+#include <map>
 using namespace Botan;
 
 struct Baza
 {
 public:
     Baza();
-    //1
-    QString SKcca;
-    QString kluczGAPPrywatny; //PKgap
-    QString nazwaUzytkownika;
-    QString haslo;
-    QString numerRejestracyjny; // NRc
-    QString kluczPubliczny; //PKc
-    QString KluczPrywatny; //SKc
-    QString czasWygenKluczy; //TNRc
+    bool zaladujUzytkownikow(QString);
+    QString pobierzHalso(QString);
+    QByteArray zaladujKluczUzytkownika(QString);
+
+    QString kluczGAPPrywatny;
 
     //2
     //TODO: dodać pola przechowujace warunki naszego przetargu WPf
@@ -38,6 +35,9 @@ public:
     QString numerAukcjiRozpatrywanej;
     QString numerZwyciezcyAukcji;
     QString listaOfertRozpatrywanych;
+
+private:
+       std::map<QString,QString> _uzytkownicy;
 };
 
 #endif // BAZA_H

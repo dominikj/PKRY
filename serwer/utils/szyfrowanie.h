@@ -6,7 +6,7 @@
 #include <botan/rsa.h>
 #include <botan/look_pk.h>
 #define KLUCZ_ROZM 2048
-#define MAX_WIAD_ROZM 240
+#define MAX_WIAD_ROZM 50
 using namespace Botan;
 
 struct Klucze{
@@ -20,7 +20,7 @@ public:
 
     Szyfrowanie();
     Klucze generujKlucze();
-    QByteArray szyfruj(QString klucz, QString dane);
+    QByteArray szyfruj(QString klucz, QByteArray dane);
     QByteArray deszyfruj(QString klucz, QByteArray dane);
     QByteArray podpisz(QString klucz, QByteArray dane);
     bool sprawdzPodpis(QString klucz,QByteArray podpis, QByteArray dane);

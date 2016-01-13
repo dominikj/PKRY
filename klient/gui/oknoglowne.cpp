@@ -38,10 +38,14 @@ void OknoGlowne::uruchom(bool t)
 {
     this->show();
 }
-
+/**
+ * @brief OknoGlowne::pierwsze_miejsce_na_liscie_odswieza_liste_aukcji
+ * @param sdf
+ * @return
+ */
 void OknoGlowne::pierwsze_miejsce_na_liscie_odswieza_liste_aukcji()
 {
-    /*!
+    /**
      * Pierwsze miejsce na liście aukcji zarezerwowane jest dla opcji odświeżenia listy
      */
 

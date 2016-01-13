@@ -16,6 +16,8 @@ Baza::Baza()
            }
          SKcca = QByteArray::fromBase64(klucz);
           }
+    else throw std::exception();
+
     if (gap.open(QIODevice::ReadOnly)) {
            QDataStream wejscie(&gap);
            QByteArray klucz;
@@ -25,11 +27,11 @@ Baza::Baza()
            }
          kluczGAP = QByteArray::fromBase64(klucz);
           }
+    else throw std::exception();
 
 
-
-    qDebug() << SKcca;
-    qDebug() << kluczGAP;
+ //   qDebug() << SKcca;
+ //   qDebug() << kluczGAP;
    gap.close();
     skcca.close();
 }

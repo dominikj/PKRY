@@ -3,19 +3,10 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QByteArray>
+#include <exception>
 Baza::Baza()
 {
- QFile skcca("skcca");
  QFile gap("gapPriv");
-    if (skcca.open(QIODevice::ReadOnly)) {
-           QDataStream wejscie(&skcca);
-           QByteArray klucz;
-
-           while (!skcca.atEnd()) {
-               wejscie >> klucz;
-           }
-         SKcca = QByteArray::fromBase64(klucz);
-          }
     if (gap.open(QIODevice::ReadOnly)) {
            QDataStream wejscie(&gap);
            QByteArray klucz;
@@ -25,11 +16,51 @@ Baza::Baza()
            }
          kluczGAPPrywatny = QByteArray::fromBase64(klucz);
           }
+          else throw std::exception();
 
-
-
-    //qDebug() << SKcca;
-    qDebug() << kluczGAPPrywatny;
    gap.close();
-    skcca.close();
+}
+
+bool Baza::zaladujUzytkownikow(QString nazwa){
+    QFile plik(nazwa);
+    if(!plik.open(QIODevice::ReadOnly)) {
+       return false;
+    }
+
+    QTextStream wej(&plik);
+
+    while(!wej.atEnd()) {
+        QString linia = wej.readLine();
+        QStringList pola = linia.split("=");
+        _uzytkownicy[pola.at(0)] = pola.at(1);
+    }
+
+    plik.close();
+    return true;
+}
+
+QString Baza::pobierzHalso(QString uzytkownik ){
+    auto znajdz = _uzytkownicy.find(uzytkownik);
+        if(znajdz != _uzytkownicy.end()) {
+            return znajdz->second;
+        }
+        else {
+            throw std::exception();
+        }
+}
+
+QByteArray Baza::zaladujKluczUzytkownika(QString nazwa){
+     QFile pkcca(nazwa +"_PKcca");
+      QByteArray tmp;
+     QByteArray klucz;
+    if (pkcca.open(QIODevice::ReadOnly)) {
+           QDataStream wejscie(&pkcca);
+           while (!pkcca.atEnd()) {
+               wejscie >> klucz;
+           }
+         tmp = QByteArray::fromBase64(klucz);
+          }
+    else throw std::exception();
+    pkcca.close();
+    return tmp;
 }

@@ -19,7 +19,11 @@ class Sterownik : public QObject
     Q_OBJECT
 public:
     explicit Sterownik(QObject *parent = 0){
+       if (_baza.zaladujUzytkownikow("users.txt") == false)
+           throw std::exception();
         _serw = new TcpSerwer (listaUzytkownikow, 10099,this, _szyfr,0);
+        _podprot1 = new Podprotokol1(_szyfr,_baza);
+
     }
 
 public slots:

@@ -17,19 +17,19 @@ int main(int argc, char *argv[])
         out << kl.publiczny.toUtf8().toBase64();
         PK.close();
     }
-    else return a.exec();
+    else QCoreApplication::exit();
 
     if (SK.open(QIODevice::Append)) {
         QDataStream out(&SK);
         out << kl.prywatny.toUtf8().toBase64();
         SK.close();
     }
-    else return a.exec();
+     else QCoreApplication::exit();
 
     QMessageBox msgBox;
     msgBox.setText("Wygenerowano pare kluczy RSA 2048bit: Private_key " + dataCzas + " i Public_key " + dataCzas);
     msgBox.setWindowTitle("KeyGen");
     msgBox.exec();
 
-    return a.exec();
+     QCoreApplication::exit();
 }

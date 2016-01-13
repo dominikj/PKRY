@@ -1,6 +1,6 @@
 #include "podprotokol4.h"
 
-Podprotokol4::Podprotokol4(Szyfrowanie& szyf, Tcp& tcp, Baza& baza) : Podprotokol(szyf, tcp, baza)
+Podprotokol4::Podprotokol4(Szyfrowanie& szyf,Baza& baza) : Podprotokol(szyf, baza)
 {
 
 }

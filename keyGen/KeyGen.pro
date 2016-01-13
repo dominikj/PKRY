@@ -24,6 +24,5 @@ LIBS += -lbotan-1.10
 #LIBPATH += /root/Pobrane/Botan/
 CONFIG += c++11
 
-DISTFILES += \
-    struktury
+DISTFILES +=
 

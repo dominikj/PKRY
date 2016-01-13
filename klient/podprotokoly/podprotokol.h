@@ -6,6 +6,9 @@
 #include <QString>
 #include <QByteArray>
 #include <QDebug>
+#define SEPARATOR1 '\t'
+#define SEPARATOR2 '\r'
+#define SEPARATOR3 '|'
 class Podprotokol //klasa abstrakcyjna
 {
 public:
@@ -18,6 +21,8 @@ protected:
     Tcp& _tcp;
     Baza& _baza;
 
+    void podziel(QByteArray& dane, QByteArray& czesc1, QByteArray& czesc2);
+    QByteArray scal(QByteArray czesc1, QByteArray czesc2);
 };
 
 #endif // PODPROTOKOL_H

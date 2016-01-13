@@ -6,10 +6,15 @@ _gniazdo->write(dane);
 
 QByteArray Tcp::odbierz(){
   //FIXME: Nie można wysłać symbolu końca danych, więc skróciłem timeout :/ :/
-    _gniazdo->waitForReadyRead(200);
+    _gniazdo->waitForReadyRead(TIMEOUT);
     return _gniazdo->readAll();
 }
 
 void Tcp::zamknij(){
     _gniazdo->close();
+}
+
+QByteArray Tcp::odbierzLinie(){
+    _gniazdo->waitForReadyRead(TIMEOUT);
+    return _gniazdo->readLine();
 }

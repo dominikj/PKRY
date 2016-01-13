@@ -28,6 +28,7 @@ private slots:
     void on_pushButton_clicked();
 
 private:
+  //  Sterownik& _ster;
     QString numer_aukcji;
     QList<QString> lista_ofert;
     QList<QString> lista_numerow_oferentow;

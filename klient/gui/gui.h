@@ -8,7 +8,9 @@ class GUI
 {
 
 public:
-    GUI(Sterownik& ster) : _sterownik(ster), _logowanie(0,ster), _oknoglowne(0,ster,_logowanie){}
+    GUI(Sterownik& ster) : _sterownik(ster), _logowanie(0,ster), _oknoglowne(0,ster,_logowanie){
+        _wyborzwyciezcy = new WybierzZwyciezce(0);
+    }
     void uruchom();
     WybierzZwyciezce *_wyborzwyciezcy;
 

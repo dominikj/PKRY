@@ -10,8 +10,8 @@
 using namespace Botan;
 
 struct Klucze{
-    QString publiczny;
-    QString prywatny;
+    QByteArray publiczny;
+    QByteArray prywatny;
 };
 
 class Szyfrowanie
@@ -20,7 +20,7 @@ public:
 
     Szyfrowanie();
     Klucze generujKlucze();
-    QByteArray szyfruj(QString klucz, QString dane);
+    QByteArray szyfruj(QString klucz, QByteArray dane);
     QByteArray deszyfruj(QString klucz, QByteArray dane);
     QByteArray podpisz(QString klucz, QByteArray dane);
     bool sprawdzPodpis(QString klucz,QByteArray podpis, QByteArray dane);

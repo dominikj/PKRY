@@ -6,7 +6,7 @@
 class Podprotokol2 : public Podprotokol
 {
 public:
-    Podprotokol2(Szyfrowanie& szyf, Tcp& tcp, Baza& baza);
+    Podprotokol2(Szyfrowanie& szyf, Baza& baza);
     virtual bool wykonaj();
     ~Podprotokol2();
 

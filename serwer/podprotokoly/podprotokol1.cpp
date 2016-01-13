@@ -1,49 +1,74 @@
 #include "podprotokol1.h"
 #include <ctime>
 #include <QFile>
+#include "utils/uzytkownik.h"
+#include "utils/proxytcp.h"
+#include <ctime>
+#include <cstdlib>
+#include <QTime>
 
-Podprotokol1::Podprotokol1(Szyfrowanie& szyf, Tcp& tcp, Baza& baza) : Podprotokol(szyf, tcp, baza){}
+#define SZYFR_TCP(UZYT) (dynamic_cast<ProxyTcp*>(UZYT->poloczenie()))
 
-bool Podprotokol1::wykonaj(){
-   /* {
-    QString strToSave(_szyfrowanie.generujKlucze().publiczny);
-    QFile output("gap");
-    if (output.open(QIODevice::Append)) {
-        QDataStream out(&output);
-        out << strToSave.toUtf8().toBase64();
-        output.close();
+
+Podprotokol1::Podprotokol1(Szyfrowanie& szyf, Baza& baza) : Podprotokol(szyf, baza) { std::srand(std::time(NULL));}
+
+bool Podprotokol1::wykonaj(Uzytkownik* uz, QByteArray dane) {
+    qDebug() << "Logowanie";
+
+    QByteArray daneLogowaniaCalosc, podpis;
+    podziel(dane,daneLogowaniaCalosc,podpis);
+
+    QByteArrayList daneLogowaniaLista = daneLogowaniaCalosc.split(SEPARATOR1);
+
+    QString nazwaUzytkownika = daneLogowaniaLista.at(0).split('=').at(1);
+    QString haslo = daneLogowaniaLista.at(1).split('=').at(1);
+    try {
+        if (haslo ==_baza.pobierzHalso(nazwaUzytkownika)) {
+            QString klucz = _baza.zaladujKluczUzytkownika(nazwaUzytkownika);
+            if(_szyfrowanie.sprawdzPodpis(klucz,podpis,daneLogowaniaCalosc) == true){
+                uz->nazwa = nazwaUzytkownika;
+                uz->PKc = klucz.toLatin1();
+                qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " zalogowany!";
+                QByteArray odpowiedz = przygotujOdpowiedz(uz);
+                                (uz)->poloczenie()->wyslij("OK\n");
+                SZYFR_TCP(uz)->wyslijSzyfrowane(uz->PKc,odpowiedz);
+                return true;
+            }
+        }
+        else
+            qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " istnieje, ale podał złe hasło";
+                SZYFR_TCP(uz)->wyslijSzyfrowane(uz->PKc,"ERR");
+                return false;
     }
-    }
-    {
-    QString strToSave(_szyfrowanie.generujKlucze().prywatny);
-    QFile output("skcca");
-    if (output.open(QIODevice::Append)) {
-        QDataStream out(&output);
-        out << strToSave.toUtf8().toBase64();
-        output.close();
-    }
-    }*/
-
-    QString Dc = "USER=" + _baza.nazwaUzytkownika + " PASSWD=" + _baza.haslo + " ";
-   QString podpis = _szyfrowanie.podpisz(_baza.SKcca, Dc.toLatin1());
-    Dc += podpis;
-    QString daneDoWyslania = _szyfrowanie.szyfruj(_baza.kluczGAPPrywatny,Dc.toLatin1());
-    qDebug() << daneDoWyslania;
-   // _tcp.wyslij(daneDoWyslania.toLatin1());
-
-   QString daneZaszyfrowane = _tcp.odbierz();
-   QString dane = _szyfrowanie.deszyfruj(_baza.SKcca, daneZaszyfrowane.toLatin1());
-   QStringList pola = dane.split("|||");
-   QStringList tmp =pola.at(1).split("=");
-   if(tmp.at(0) == "SKGAP")
-       podpis = tmp.at(1);
-    if (_szyfrowanie.sprawdzPodpis(_baza.kluczGAPPrywatny,podpis.toLatin1(),pola.at(0).toLatin1())){
-        // zapis pól
+    catch(std::exception ex) {
+        qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " nie istnieje!";
+           SZYFR_TCP(uz)->wyslijSzyfrowane(uz->PKc,"ERR");
+           return false;
     }
 
-
-    return true;
 }
-Podprotokol1::~Podprotokol1(){
+
+QByteArray Podprotokol1::przygotujOdpowiedz(Uzytkownik *uz){
+    QByteArray odpowiedz;
+
+    uz->numerRejestracyjny = QString::number(rand());
+    odpowiedz += uz->numerRejestracyjny;
+    odpowiedz += SEPARATOR1;
+     uz->czasWygenKluczy = QTime::currentTime().toString();
+     odpowiedz += uz->czasWygenKluczy.toLatin1();
+
+    Klucze kl = _szyfrowanie.generujKlucze();
+    odpowiedz += SEPARATOR1;
+    odpowiedz += kl.prywatny;
+    odpowiedz += SEPARATOR1;
+    odpowiedz += kl.publiczny;
+    QByteArray podpis = _szyfrowanie.podpisz(_baza.kluczGAPPrywatny,odpowiedz);
+    odpowiedz = scal(odpowiedz,podpis);
+    return odpowiedz;
+
+
+}
+
+Podprotokol1::~Podprotokol1() {
 
 }

@@ -4,6 +4,7 @@
 #include <QtNetwork/QTcpSocket>
 #include <QMainWindow>
 #include <iostream>
+#define TIMEOUT 200
 class Tcp: public QObject
 {
     Q_OBJECT
@@ -13,6 +14,7 @@ public:
     void wyslij(QByteArray);
     QByteArray odbierz();
     void zamknij();
+    QByteArray odbierzLinie();
     QTcpSocket* const gniazdo() const { return _gniazdo;}
 protected:
     int _port;

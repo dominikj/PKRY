@@ -9,12 +9,12 @@
 #include "gui/gui.h"
 #include "sterownik/oczekujzwyciezcy.h"
 #include "utils/proxytcp.h"
+#include <QTime>
 class Sterownik : public QObject
 {
     Q_OBJECT
 public:
     Sterownik();
-    ~Sterownik();
     void przygotowanie();
     void ustawDaneLogSer(QString login, QString haslo, QString adres, int port = 10099);
     bool wykonajPodProt2(QString _nowaAukcja);
@@ -22,8 +22,9 @@ public:
     QString pobierzAukcje();
     OczekujZwyciezcy *czekajNaZwyciezce();
     Tcp* _tcp = nullptr;
+    QString daneKonsola();
 public slots:
-    void wez_dane_zwyciezcy(QString zwyciezca, QString inni);
+    void daneDoKonsoli(QString);
 
 signals:
     void odpowiedz_serwera(QString odp);
@@ -39,6 +40,7 @@ private:
     //tu byl Tcp*
  int _port = 10099;
  QString _adres = "127.0.0.1";
+ QString _konsola;
 };
 
 #endif // STEROWNIK_H
