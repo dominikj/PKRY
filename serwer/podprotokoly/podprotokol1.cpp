@@ -37,12 +37,12 @@ bool Podprotokol1::wykonaj(Uzytkownik* uz, QByteArray dane) {
         }
         else
             qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " istnieje, ale podał złe hasło";
-                SZYFR_TCP(uz)->wyslijSzyfrowane(uz->PKc,"ERR");
+                 (uz)->poloczenie()->wyslij("OK\n");
                 return false;
     }
     catch(std::exception ex) {
         qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " nie istnieje!";
-           SZYFR_TCP(uz)->wyslijSzyfrowane(uz->PKc,"ERR");
+            (uz)->poloczenie()->wyslij("OK\n");
            return false;
     }
 
