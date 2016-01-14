@@ -37,12 +37,12 @@ bool Podprotokol1::wykonaj(Uzytkownik* uz, QByteArray dane) {
         }
         else
             qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " istnieje, ale podał złe hasło";
-                 (uz)->poloczenie()->wyslij("OK\n");
+                 (uz)->poloczenie()->wyslij("ERR\n");
                 return false;
     }
     catch(std::exception ex) {
         qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " nie istnieje!";
-            (uz)->poloczenie()->wyslij("OK\n");
+            (uz)->poloczenie()->wyslij("ERR\n");
            return false;
     }
 

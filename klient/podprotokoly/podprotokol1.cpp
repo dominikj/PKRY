@@ -16,6 +16,7 @@ bool Podprotokol1::wykonaj() {
     Dc = scal(Dc,podpis);
     SZYFR_TCP->wyslijSzyfrowane(_baza.kluczGAP,"PODPROTOKOL1|" +Dc);
     QByteArray dane = SZYFR_TCP->odbierzLinie();
+    qDebug() << dane;
     if(dane != "OK\n") return false;
 
       dane = SZYFR_TCP->odbierzSzyfrowane(_baza.SKcca);
