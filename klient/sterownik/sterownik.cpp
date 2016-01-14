@@ -11,6 +11,7 @@ void Sterownik::ustawDaneLogSer(QString login, QString haslo, QString adres, int
     _adres = adres;
     _baza.nazwaUzytkownika = login;
     _baza.haslo = haslo;
+    _konsola = "";
     przygotowanie();
 }
 
@@ -66,9 +67,11 @@ void Sterownik::daneDoKonsoli(QString dane){
     qDebug() << dane;
 }
 QString Sterownik::daneKonsola(){
-    QString tmp = _konsola;
-    _konsola.clear();
-    return tmp;
+    //qDebug() << _konsola;
+       //tring tmp = _konsola;
+    QString _tmp = "TEST DZIALANIA PISANIA DO KONSOLI KLIENTA, PROSIMY ZACHOWAĆ OSTROŻNOSĆ I ODSUNAĆ SIĘ OD KRAWĘDZI PERONU!!!";
+    //_konsola.clear();
+    return _tmp;
 }
 
 

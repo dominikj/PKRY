@@ -27,6 +27,7 @@ OknoGlowne::OknoGlowne(QWidget *parent, Sterownik &ster, Start& st) :
     pierwsze_miejsce_na_liscie_odswieza_liste_aukcji();
     QString test = "nr_aukcji=101;nazwa=Test struktury aukcji;opis=Ten przetarg ma za zadanie sprawdzic, czy taka struktura danych moze bezbolesnie istniec. Lorem ipsum, costam costam.;data_roz=03:01:2016 18:26:35;data_zak=03:01:2016 18:31:35;kryteria={uroda,wdziek,powab,sila,masa,biala,rasa,dobre uczynnki,bicek,kolor,folklor,ksztalt,zapach}::nr_aukcji=291;nazwa=Budowa mostu Krasińskiego;opis=Budowa mostu Krasińskiego. Cena 90%, liczba ofert 5%, czas 5%.;data_roz=03:01:2016 18:26:35;data_zak=03:02:2016 18:31:35;kryteria={cena,liczba ofert w ostatnich dwóch latach,czas wykonania}";
     zapelnij_liste_aukcji(test);
+    dopisz_do_konsoli();
 }
 
 OknoGlowne::~OknoGlowne()
@@ -69,6 +70,7 @@ void OknoGlowne::zapelnij_liste_aukcji(QString lista_aukcji)
         wpis = "(" + stuk.numer_aukcji + ") " + bazaAktywnychAukcji.value(stuk.numer_aukcji).nazwa_aukcji;
         ui->listWidget->addItem(wpis);
     }
+    dopisz_do_konsoli();
 }
 
 OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
@@ -155,7 +157,7 @@ void OknoGlowne::on_pushButton_2_clicked()
     nowa->setModal(true);
     connect(nowa,SIGNAL(nowa_aukcja(polaAukcji)),this,SLOT(zlap_nowa_aukcje(polaAukcji)));
     nowa->exec();
-
+    dopisz_do_konsoli();
 }
 
 void OknoGlowne::zlap_nowa_aukcje(polaAukcji pA)
@@ -169,6 +171,7 @@ void OknoGlowne::zlap_nowa_aukcje(polaAukcji pA)
     QString _nowaAukcja = przygotuj_dane_aukcji_do_wyslania(pA);
     if(_sterownik.wykonajPodProt2(_nowaAukcja) == true)
         QMessageBox::information(this,"OK","Aukcja dodana");
+    dopisz_do_konsoli();
 }
 
 void OknoGlowne::on_pushButton_clicked()
@@ -202,6 +205,7 @@ void OknoGlowne::on_pushButton_3_clicked()
     wyborzwyciezcy = new WybierzZwyciezce();
     wyborzwyciezcy->setModal(true);
     wyborzwyciezcy->exec();
+    dopisz_do_konsoli();
 }
 
 QString OknoGlowne::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
@@ -227,6 +231,7 @@ QString OknoGlowne::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
     }
     wynik = wynik + "}";
     QMessageBox::critical(this,"Oj",wynik);
+    dopisz_do_konsoli();
     return wynik;
 }
 
@@ -235,4 +240,18 @@ void OknoGlowne::wybierz_zwyciezce_wyswietl_okno(QString wZ)
     wyborzwyciezcy = new WybierzZwyciezce();
     wyborzwyciezcy->setModal(true);
     wyborzwyciezcy->exec();
+    dopisz_do_konsoli();
+}
+
+void OknoGlowne::dopisz_do_konsoli()
+{
+    /*!
+     * Wprowadza przechwycony tekst do konsoli.
+     */
+    QString _kod = _sterownik.daneKonsola();
+    QDateTime qdt = QDateTime::currentDateTime();
+    ui->textEdit->insertPlainText(qdt.toString(QString("HH:mm:ss")) + " >>");
+    ui->textEdit->insertPlainText(_kod);
+    ui->textEdit->insertPlainText("\n");
+    //Można dodać bajer, żeby pokazywało czas wprowadzenia.
 }

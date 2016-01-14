@@ -59,6 +59,7 @@ private:
     QList<QString> listaAukcji;
     QHash<QString, polaAukcji> bazaAktywnychAukcji;
     QList<polaAukcji> listaAktywnychAukcji; //pierwsze - nr aukcji, drugie - warunki aukcji
+    void dopisz_do_konsoli();
     QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
     polaAukcji konwertuj_do_struktury(QString wpis);
     Sterownik& _sterownik;
