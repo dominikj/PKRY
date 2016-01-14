@@ -2,6 +2,7 @@
 
 bool Tcp::polacz()
 {
+    if(_gniazdo == nullptr || !_gniazdo->isOpen()){
 _gniazdo = new QTcpSocket(this);
 _gniazdo->connectToHost(_adres, _port);
     if( _gniazdo->waitForConnected() ) {
@@ -13,6 +14,8 @@ _gniazdo->connectToHost(_adres, _port);
         return false;
 
     }
+    }
+    return true;
 }
 
 void Tcp::wyslij(QByteArray dane){

@@ -25,8 +25,9 @@ bool Sterownik::zaloguj(){
    if ((_tcp->polacz()) && ( _podprot1->wykonaj())){
         return true;
    }
-   else return false;
-
+   else{
+       return false;
+}
 }
 
 bool Sterownik::wykonajPodProt2(QString _nowaAukcja)
