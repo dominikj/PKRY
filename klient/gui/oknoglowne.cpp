@@ -25,9 +25,9 @@ OknoGlowne::OknoGlowne(QWidget *parent, Sterownik &ster, Start& st) :
     connect(&_start,SIGNAL(uruchom(bool)),this,SLOT(uruchom(bool)));
     QList<QString> listaAukcji;
     pierwsze_miejsce_na_liscie_odswieza_liste_aukcji();
-    QString test = "nr_aukcji=101;nazwa=Test struktury aukcji;opis=Ten przetarg ma za zadanie sprawdzic, czy taka struktura danych moze bezbolesnie istniec. Lorem ipsum, costam costam.;data_roz=03:01:2016 18:26:35;data_zak=03:01:2016 18:31:35;kryteria={uroda,wdziek,powab,sila,masa,biala,rasa,dobre uczynnki,bicek,kolor,folklor,ksztalt,zapach}::nr_aukcji=291;nazwa=Budowa mostu Krasińskiego;opis=Budowa mostu Krasińskiego. Cena 90%, liczba ofert 5%, czas 5%.;data_roz=03:01:2016 18:26:35;data_zak=03:02:2016 18:31:35;kryteria={cena,liczba ofert w ostatnich dwóch latach,czas wykonania}";
+    QString test = "nr_aukcji=101;nazwa=Remont PKiN;opis=Przetarg obejmuje czyszczenie elewacji, wymianę stolarki okiennej oraz naprawę dylatacji. Kryterrium 100% cena.;data_roz=03:01:2016 18:26:35;data_zak=03:01:2026 18:31:35;kryteria={cena}::nr_aukcji=291;nazwa=Budowa mostu Krasińskiego;opis=Budowa mostu Krasińskiego. Cena 90%, liczba ofert 5%, czas 5%.;data_roz=03:01:2016 18:26:35;data_zak=03:02:2016 18:31:35;kryteria={cena,liczba ofert w ostatnich dwóch latach,czas wykonania}";
     zapelnij_liste_aukcji(test);
-    dopisz_do_konsoli();
+    //dopisz_do_konsoli();
 }
 
 OknoGlowne::~OknoGlowne()
@@ -70,7 +70,7 @@ void OknoGlowne::zapelnij_liste_aukcji(QString lista_aukcji)
         wpis = "(" + stuk.numer_aukcji + ") " + bazaAktywnychAukcji.value(stuk.numer_aukcji).nazwa_aukcji;
         ui->listWidget->addItem(wpis);
     }
-    dopisz_do_konsoli();
+    //dopisz_do_konsoli();
 }
 
 OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
@@ -82,15 +82,15 @@ OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
         QStringList cieta_pozycja = cieta_struktura[j].split("=");
         if (cieta_pozycja[0] == "nr_aukcji")
         {
-            struktura.numer_aukcji = cieta_pozycja[1];
+            struktura.numer_aukcji = filtr_szkodliwych_znakow(cieta_pozycja[1],false);
         }
         else if(cieta_pozycja[0] == "nazwa")
         {
-            struktura.nazwa_aukcji = cieta_pozycja[1];
+            struktura.nazwa_aukcji = filtr_szkodliwych_znakow(cieta_pozycja[1],false);
         }
         else if(cieta_pozycja[0] == "opis")
         {
-            struktura.opis_aukcji = cieta_pozycja[1];
+            struktura.opis_aukcji = filtr_szkodliwych_znakow(cieta_pozycja[1],false);
         }
         else if(cieta_pozycja[0] == "data_roz")
         {
@@ -106,7 +106,7 @@ OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
             QStringList pociete_kryteria = wyciete_nawiasy.split(",");
             for(int i = 0; i < pociete_kryteria.count();i++)
             {
-                struktura.lista_kryteriow.append(pociete_kryteria[i]);
+                struktura.lista_kryteriow.append(filtr_szkodliwych_znakow(pociete_kryteria[i],false));
             }
         }
     }
@@ -215,8 +215,8 @@ QString OknoGlowne::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
      * \brief wynik
      */
     QString wynik;
-    wynik = wynik + "nazwa=" + pA.nazwa_aukcji + ";";
-    wynik = wynik + "opis=" + pA.opis_aukcji + ";";
+    wynik = wynik + "nazwa=" + filtr_szkodliwych_znakow(pA.nazwa_aukcji,true) + ";";
+    wynik = wynik + "opis=" + filtr_szkodliwych_znakow(pA.opis_aukcji,true) + ";";
     wynik = wynik + "data_roz=" + pA.data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
     wynik = wynik + "data_zak=" + pA.data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
     wynik = wynik + "kryteria={";
@@ -224,10 +224,10 @@ QString OknoGlowne::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
     {
         if (i == pA.lista_kryteriow.count()-1)
         {
-            wynik = wynik + pA.lista_kryteriow[i];
+            wynik = wynik + filtr_szkodliwych_znakow(pA.lista_kryteriow[i],true);
         }
         else
-            wynik = wynik + pA.lista_kryteriow[i] + ",";
+            wynik = wynik + filtr_szkodliwych_znakow(pA.lista_kryteriow[i],true) + ",";
     }
     wynik = wynik + "}";
     QMessageBox::critical(this,"Oj",wynik);
@@ -249,9 +249,39 @@ void OknoGlowne::dopisz_do_konsoli()
      * Wprowadza przechwycony tekst do konsoli.
      */
     QString _kod = _sterownik.daneKonsola();
-    QDateTime qdt = QDateTime::currentDateTime();
-    ui->textEdit->insertPlainText(qdt.toString(QString("HH:mm:ss")) + " >>");
-    ui->textEdit->insertPlainText(_kod);
-    ui->textEdit->insertPlainText("\n");
-    //Można dodać bajer, żeby pokazywało czas wprowadzenia.
+    //QDateTime qdt = QDateTime::currentDateTime();
+    //ui->textEdit->insertPlainText(qdt.toString(QString("HH:mm:ss")) + " >>");
+    if(_kod.length() > 0)
+    {
+        ui->textEdit->insertPlainText(_kod);
+        ui->textEdit->insertPlainText("\n");
+    }
+}
+
+QString OknoGlowne::filtr_szkodliwych_znakow(QString tekst, bool filtr_czy_defiltr)
+{
+    /*Szkodliwe dla nas znaki to ::, ;, =, { oraz {
+     * :: -> $01
+     * ,  -> $02
+     * =  -> $03
+     * {  -> $04
+     * }  -> $05 */
+    if(filtr_czy_defiltr == true)
+    {
+        tekst.replace(QRegularExpression("::"), "$01");
+        tekst.replace(QRegularExpression(","), "$02");
+        tekst.replace(QRegularExpression("="), "$03");
+        tekst.replace(QRegularExpression("}"), "$04");
+        tekst.replace(QRegularExpression("{"), "$05");
+        return tekst;
+    }
+    else
+    {
+        tekst.replace(QRegularExpression("$01"), "::");
+        tekst.replace(QRegularExpression("$02"), ",");
+        tekst.replace(QRegularExpression("$03"), "=");
+        tekst.replace(QRegularExpression("$04"), "{");
+        tekst.replace(QRegularExpression("$05"), "}");
+        return tekst;
+    }
 }

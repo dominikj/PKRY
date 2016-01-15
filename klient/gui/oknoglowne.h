@@ -16,11 +16,17 @@ namespace Ui {
 class OknoGlowne;
 }
 
+/*!
+ * Klasa OknoGlowne jest odpowiedzialna za obsługę i wyświetlania głównego okna programu. Jest to okno, które wyświetla się użytkownikowi po jego poprawnym zalogowaniu. Znajdują się tutaj także metody do zażądania komunikacji z serwerem (poprzez Sterownik), w tej także klasie dokonuje się większość operacji na danych tekstowych (formatowanie tekstu, jego separacja na komponenty itp.)
+ */
 class OknoGlowne : public QMainWindow
 {
     Q_OBJECT
 
 public:
+    /*!
+     * \brief The polaAukcji struct
+     */
     struct polaAukcji{
         QString numer_aukcji;
         QString nazwa_aukcji;
@@ -60,6 +66,7 @@ private:
     QHash<QString, polaAukcji> bazaAktywnychAukcji;
     QList<polaAukcji> listaAktywnychAukcji; //pierwsze - nr aukcji, drugie - warunki aukcji
     void dopisz_do_konsoli();
+    QString filtr_szkodliwych_znakow(QString tekst, bool filtr_czy_defiltr);
     QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
     polaAukcji konwertuj_do_struktury(QString wpis);
     Sterownik& _sterownik;

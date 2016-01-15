@@ -68,9 +68,9 @@ void Sterownik::daneDoKonsoli(QString dane){
 }
 QString Sterownik::daneKonsola(){
     //qDebug() << _konsola;
-       //tring tmp = _konsola;
-    QString _tmp = "TEST DZIALANIA PISANIA DO KONSOLI KLIENTA, PROSIMY ZACHOWAĆ OSTROŻNOSĆ I ODSUNAĆ SIĘ OD KRAWĘDZI PERONU!!!";
-    //_konsola.clear();
+    QString _tmp = _konsola;
+    //QString _tmp = "TEST DZIALANIA PISANIA DO KONSOLI KLIENTA, PROSIMY ZACHOWAĆ OSTROŻNOSĆ I ODSUNAĆ SIĘ OD KRAWĘDZI PERONU!!!";
+    _konsola.clear();
     return _tmp;
 }
 
