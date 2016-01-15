@@ -162,7 +162,7 @@ void OknoGlowne::on_pushButton_2_clicked()
 
 void OknoGlowne::zlap_nowa_aukcje(polaAukcji pA)
 {
-    /*!
+     /*
       * Przechwytuje dane z okna dialogowego do stworzenia aukcji.
       */
     ui->plainTextEdit->insertPlainText(pA.nazwa_aukcji);
