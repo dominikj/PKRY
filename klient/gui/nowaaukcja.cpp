@@ -25,19 +25,11 @@ NowaAukcja::~NowaAukcja()
 
 void NowaAukcja::on_pushButton_3_clicked()
 {
-    /*!
-      * Po otwarciu okna dialogowego z dodaniem nowej aukcji, umożliwia powrót do menu głównego.
-      *
-      */
     this->close();
 }
 
 void NowaAukcja::on_pushButton_clicked()
 {
-    /*!
-     * Wyświetla okno dialogowe z możliwością dodania nowego kryterium przetargu.
-     *
-     */
     bool ok;
     QString nowe_kryterium = QInputDialog::getText(this,tr("Dodaj nowe kryterium"),tr("Podaj nazwę dla kryterium:"),QLineEdit::Normal,QString("Nowe kryterium"),&ok);
     if(ok && !nowe_kryterium.isEmpty())
@@ -48,9 +40,6 @@ void NowaAukcja::on_pushButton_clicked()
 
 void NowaAukcja::on_pushButton_4_clicked()
 {
-    /*!
-     * Usuwa wybrane kryterium z listy kryteriów przetargu.
-     */
     //delete ui->listWidget->takeItem(ui->listWidget->selectedItems().count());
     QListWidgetItem *it = ui->listWidget->item(ui->listWidget->currentRow());
     delete it;
@@ -58,9 +47,6 @@ void NowaAukcja::on_pushButton_4_clicked()
 
 void NowaAukcja::on_pushButton_2_clicked()
 {
-    /*!
-     * Po kliknięciu następuje mała walidacja wpisanych pól, następnie dane są pobierane i wysyłane do GAPa.
-     */
     if(ui->lineEdit_2->text().isEmpty())
     {
         QMessageBox::critical(this,"Oj","Numer aukcji jest niezbędny, by mogła zostać ona stworzona na serwerze.");
