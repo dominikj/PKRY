@@ -34,7 +34,11 @@ void Start::on_pushButton_clicked()
     login = ui->lineEdit->text();
     haslo = ui->lineEdit_2->text();
     serwer = ui->lineEdit_3->text();
-
+    if(true)
+    {
+        emit uruchom(true);
+        this->close();
+    }
     if(checkLoginAndPassword() == true)
     {
         std::cout << "good";
