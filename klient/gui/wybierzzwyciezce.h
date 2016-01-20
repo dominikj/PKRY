@@ -3,6 +3,11 @@
 
 #include <QDialog>
 #include <QString>
+#include "sterownik/oczekujzwyciezcy.h"
+struct oferta{
+    QString NRo;
+    QString Non;
+};
 
 namespace Ui {
 class WybierzZwyciezce;
@@ -15,10 +20,11 @@ class WybierzZwyciezce : public QDialog
 public:
     explicit WybierzZwyciezce(QWidget *parent = 0);
     void przekaz_liste_ofert(QString string_lista_ofert);
+     OczekujZwyciezcy* zwyciezca;
     ~WybierzZwyciezce();
 
 signals:
-    void info_dla_sterownika(QString zwyciezca, QString wzieci_pod_uwage);
+    void info_dla_sterownika(QString);
 
 public slots:
     void wyswietl_okno(QString dane);
@@ -34,6 +40,7 @@ private:
     QList<QString> lista_numerow_oferentow;
     void wyswietl_oferty();
     Ui::WybierzZwyciezce *ui;
+    std::vector<oferta> oferty;
 };
 
 #endif // WYBIERZZWYCIEZCE_H

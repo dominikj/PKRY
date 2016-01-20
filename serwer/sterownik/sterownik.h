@@ -23,14 +23,22 @@ public:
            throw std::exception();
         _serw = new TcpSerwer (listaUzytkownikow, 10099,this, _szyfr,0);
         _podprot1 = new Podprotokol1(_szyfr,_baza);
+        _podprot2 = new Podprotokol2(_szyfr,_baza);
+        _podprot3 = new Podprotokol3(_szyfr,_baza);
+        _podprot4 = new Podprotokol4(_szyfr,_baza);
+        _podprot2->ster =this;
+
 
     }
+    void wyslijAukcje(Uzytkownik*);
 
 public slots:
 void koniecPoloczenia(Uzytkownik*);
 void przyszlyDane(Uzytkownik*);
+void koniecAukcji(Aukcja*);
 
 private:
+bool _blokada = false;
  Podprotokol1* _podprot1 =nullptr;
  Podprotokol2* _podprot2 =nullptr;
  Podprotokol3* _podprot3 =nullptr;

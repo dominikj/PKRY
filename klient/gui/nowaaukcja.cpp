@@ -1,20 +1,17 @@
+
 #include "nowaaukcja.h"
 #include "ui_nowaaukcja.h"
 #include <QInputDialog>
 #include <QMessageBox>
-
-NowaAukcja::NowaAukcja(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::NowaAukcja)
+#include "sterownik/sterownik.h"
+NowaAukcja::NowaAukcja( Sterownik& ster, QWidget *parent) : QDialog(parent), _ster(ster), ui(new Ui::NowaAukcja)
 {
     /*!
      * Konstruktor okna dialogowego z możliwością dodania nowej aukcji. Ustawia pola daty na obecny dzień i godzinę.
      *
      */
     ui->setupUi(this);
-    ui->dateTimeEdit->setMinimumDate(QDate::currentDate());
     ui->dateTimeEdit_2->setMinimumDate(QDate::currentDate());
-    ui->dateTimeEdit->setMinimumDateTime(QDateTime::currentDateTime());
     ui->dateTimeEdit_2->setMinimumDateTime(QDateTime::currentDateTime());
 }
 
@@ -61,17 +58,9 @@ void NowaAukcja::on_pushButton_2_clicked()
     /*!
      * Po kliknięciu następuje mała walidacja wpisanych pól, następnie dane są pobierane i wysyłane do GAPa.
      */
-    if(ui->lineEdit_2->text().isEmpty())
-    {
-        QMessageBox::critical(this,"Oj","Numer aukcji jest niezbędny, by mogła zostać ona stworzona na serwerze.");
-    }
-    else if(ui->lineEdit->text().isEmpty())
+    if(ui->lineEdit->text().isEmpty())
     {
         QMessageBox::critical(this,"Oj","Aukcja nie może pozostać anonimowa. Proszę, wpisz jej nazwę.");
-    }
-    else if(ui->dateTimeEdit->dateTime()>ui->dateTimeEdit_2->dateTime())
-    {
-        QMessageBox::critical(this,"Oj","Aukcja nie może zakończyć się przed jej rozpoczęciem. Proszę, zwróć uwagę na ustawione daty.");
     }
     else if(ui->listWidget->count() < 1)
     {
@@ -79,49 +68,49 @@ void NowaAukcja::on_pushButton_2_clicked()
     }
     else
     {
-        pola_aukcji.numer_aukcji = ui->lineEdit_2->text();
         pola_aukcji.nazwa_aukcji = ui->lineEdit->text();
         pola_aukcji.opis_aukcji = ui->textEdit->toPlainText();
-        pola_aukcji.data_rozpoczecia = ui->dateTimeEdit->dateTime();
         pola_aukcji.data_zakonczenia = ui->dateTimeEdit_2->dateTime();
-//        QString nazwa_aukcji = ui->lineEdit->text();
-//        QString opis_aukcji = ui->textEdit->toPlainText();
-//        QDateTime data_rozpoczecia = ui->dateTimeEdit->dateTime();
-//        QDateTime data_zakonczenia = ui->dateTimeEdit_2->dateTime();
-//        QList<QString> lista_kryteriow;
         for(int i = 0; i < ui->listWidget->count(); i++)
         {
             pola_aukcji.lista_kryteriow.append(ui->listWidget->item(i)->text());
         }
         //Teraz to trzeba jakoś zserializować i przesłać jako WPf
-        //przygotuj_dane_aukcji_do_wyslania(pola_aukcji);
+        ;
+       if( _ster.dodajAukcje(przygotuj_dane_aukcji_do_wyslania(pola_aukcji))){
+               QMessageBox::information(this,"OK","Aukcja dodana");
         emit nowa_aukcja(pola_aukcji);
-        this->close();
+               this->close();
+       }
+       else{
+             QMessageBox::critical(this,"Bład","Odrzucono aukcję");
+       }
     }
 }
 
-//QString NowaAukcja::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
-//{
-//    /*!
-//     * Wstępnie zwalidowane dane przygotowuje w postaci stringa do wysłania na serwer
-//     * \brief wynik
-//     */
-//    QString wynik;
-//    wynik = wynik + "nazwa=" + pA.nazwa_aukcji + ";";
-//    wynik = wynik + "opis=" + pA.opis_aukcji + ";";
-//    wynik = wynik + "data_roz=" + pA.data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
-//    wynik = wynik + "data_zak=" + pA.data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
-//    wynik = wynik + "kryteria={";
-//    for(int i = 0; i < pA.lista_kryteriow.count();i++)
-//    {
-//        if (i == pA.lista_kryteriow.count()-1)
-//        {
-//            wynik = wynik + pA.lista_kryteriow[i];
-//        }
-//        else
-//            wynik = wynik + pA.lista_kryteriow[i] + ",";
-//    }
-//    wynik = wynik + "}";
-//    QMessageBox::critical(this,"Oj",wynik);
-//    return wynik;
-//}
+QString NowaAukcja::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
+{
+    /*!
+     * Wstępnie zwalidowane dane przygotowuje w postaci stringa do wysłania na serwer
+     * \brief wynik
+     */
+    QString wynik;
+    wynik = wynik + "nazwa=" + pA.nazwa_aukcji + ";";
+    wynik = wynik + "opis=" + pA.opis_aukcji + ";";
+    wynik = wynik + "data_zak=" + pA.data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
+    wynik = wynik + "kryteria={";
+    for(int i = 0; i < pA.lista_kryteriow.count();i++)
+    {
+        if (i == pA.lista_kryteriow.count()-1)
+        {
+            wynik = wynik + pA.lista_kryteriow[i];
+        }
+        else
+            wynik = wynik + pA.lista_kryteriow[i] + ",";
+    }
+    wynik = wynik + "}";
+    QMessageBox::critical(this,"Dane aukcji",wynik);
+
+    return wynik;
+}
+

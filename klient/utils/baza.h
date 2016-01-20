@@ -2,6 +2,8 @@
 #define BAZA_H
 #include <botan/botan.h>
 #include <QString>
+#include"utils/aukcja.h"
+
 using namespace Botan;
 
 struct Baza
@@ -21,15 +23,18 @@ public:
     //2
     //TODO: dodać pola przechowujace warunki naszego przetargu WPf
     QString warunkiPrzetargu;
-    QString czescKluczaPrzetargu; //SKp(f) lub SKp(o)
+    QByteArray czescKluczaPrzetargu; //SKp(f) lub SKp(o)
     QString numerFirmy; //Nf
     QString numerAukcji; //Np
     QString kluczPublicznyPrzetargu; //PKp <- ten tylko dla składającej ofertę
+
+    std::vector<Aukcja> DostepneAukcje;
 
     //3
     QString czasWygenOferty; //To
     QString numerOferenta; //No
     QString oferta;
+    QString ofertaNumerAukcji;
      //TODO: dodać pola przechowujace ofertę oferenta
 
     //4

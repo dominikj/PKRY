@@ -26,7 +26,7 @@ public:
         _serw->listen(QHostAddress::Any, 10099);
         qDebug() << "Nasłuchuje";
     }
-
+~TcpSerwer();
 signals:
 
 public slots:

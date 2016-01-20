@@ -1,5 +1,10 @@
 #include "szyfrowanie.h"
 #include <QDebug>
+#include <memory>
+#include <QFile>
+#include <ctime>
+#include <QDataStream>
+#include <cryptopp/osrng.h>
 
 Szyfrowanie::Szyfrowanie()
 {
@@ -18,7 +23,7 @@ QByteArray Szyfrowanie::szyfruj(QString klucz, QByteArray dane) {
     AutoSeeded_RNG rand;
     DataSource_Memory kluczMem(klucz.toStdString());
     X509_PublicKey *kluczRsa = X509::load_key(kluczMem);
-    PK_Encryptor *enc = get_pk_encryptor(*kluczRsa, "EME1(SHA-256)");
+    Botan::PK_Encryptor *enc = get_pk_encryptor(*kluczRsa, "EME1(SHA-256)");
     QByteArray tablicaDanych = dane;
     byte wiadomosc[tablicaDanych.count()];
     for (int i = 0; i < tablicaDanych.count(); i++)
@@ -39,7 +44,7 @@ QByteArray Szyfrowanie::deszyfruj(QString klucz, QByteArray dane) {
     AutoSeeded_RNG rand;
     DataSource_Memory kluczMem(klucz.toStdString());
     PKCS8_PrivateKey *kluczRsa= PKCS8::load_key(kluczMem, rand);
-    PK_Decryptor *dec = get_pk_decryptor(*kluczRsa, "EME1(SHA-256)");
+    Botan::PK_Decryptor *dec = get_pk_decryptor(*kluczRsa, "EME1(SHA-256)");
     SecureVector<byte> daneVector;
     for(int i = 0; i < dane.length(); ++i ) {
         daneVector.push_back(dane[i]);
@@ -61,7 +66,7 @@ QByteArray Szyfrowanie::podpisz(QString klucz, QByteArray dane) {
     AutoSeeded_RNG rand;
     DataSource_Memory kluczMem(klucz.toStdString());
     PKCS8_PrivateKey *kluczRsa = PKCS8::load_key(kluczMem, rand);
-    PK_Signer* signer = get_pk_signer(*kluczRsa, "EMSA1(SHA-256)");
+    Botan::PK_Signer* signer = get_pk_signer(*kluczRsa, "EMSA1(SHA-256)");
     byte wiadomosc[dane.count()];
     for (int i = 0; i < dane.count(); i++)
     {
@@ -82,7 +87,7 @@ QByteArray Szyfrowanie::podpisz(QString klucz, QByteArray dane) {
 bool Szyfrowanie::sprawdzPodpis(QString klucz, QByteArray podpis, QByteArray dane) {
     DataSource_Memory kluczMem(klucz.toStdString());
     X509_PublicKey *kluczRsa = X509::load_key(kluczMem);
-    PK_Verifier* verifier = get_pk_verifier(*kluczRsa, "EMSA1(SHA-256)");
+    Botan::PK_Verifier* verifier = get_pk_verifier(*kluczRsa, "EMSA1(SHA-256)");
     byte wiadomosc[dane.count()];
     for (int i = 0; i < dane.count(); i++)
     {
@@ -95,4 +100,90 @@ bool Szyfrowanie::sprawdzPodpis(QString klucz, QByteArray podpis, QByteArray dan
     }
     bool jestPoprawny = verifier->verify_message(wiadomosc, sizeof(wiadomosc), pod, sizeof(pod));
     return jestPoprawny;
+}
+
+std::vector<QByteArray> Szyfrowanie::podzielSekret(int minimalneUczestnictwo, int liczbaUdzialow, QByteArray dane) { // TODO: Przerobić tego potworka na coś porządnego
+    zapiszDoBufora(dane);
+    std::string ziarno = std::to_string(std::time(NULL));
+    ziarno.resize(16, ' ');
+
+    RandomPool rng;
+    rng.IncorporateEntropy((byte *)ziarno.c_str(), strlen(ziarno.c_str()));
+
+    ChannelSwitch *przelacznikKanalow;
+    FileSource zrodlo("tmp", false, new SecretSharing(rng, minimalneUczestnictwo, liczbaUdzialow, przelacznikKanalow = new ChannelSwitch));
+
+    vector_member_ptrs<FileSink> plikowyZlew(liczbaUdzialow);
+    std::string kanal;
+    for (int i=0; i<liczbaUdzialow; i++)
+    {
+        char rozszerzenie[5] = ".000";
+        rozszerzenie[1]='0'+byte(i/100);
+        rozszerzenie[2]='0'+byte((i/10)%10);
+        rozszerzenie[3]='0'+byte(i%10);
+        plikowyZlew[i].reset(new FileSink((std::string("tmp")+rozszerzenie).c_str()));
+
+        kanal = WordToString<word32>(i);
+        plikowyZlew[i]->Put((const byte *)kanal.data(), 4);
+        przelacznikKanalow->AddRoute(kanal, *plikowyZlew[i], DEFAULT_CHANNEL);
+    }
+
+    zrodlo.PumpAll();
+    QFile::remove("tmp");
+    return wczytajZBufora(liczbaUdzialow,"tmp.");
+
+}
+
+QByteArray Szyfrowanie::przywrocSekret(int minimalneUczestnictwo)
+{
+    SecretRecovery przywracanie(minimalneUczestnictwo, new FileSink("out.000"));
+    QString nazwa;
+    CryptoPP::vector_member_ptrs<FileSource> zrodlaPlikowe(minimalneUczestnictwo);
+    CryptoPP::SecByteBlock kanal(4);
+    int i;
+    for (i=0; i<minimalneUczestnictwo; i++)
+    {
+        if(i < 10)
+            nazwa = QString::fromStdString("tmp.00" + std::to_string(i));
+        else if(i < 100)
+            nazwa = QString::fromStdString("tmp.0" + i);
+        else
+            nazwa = QString::fromStdString("tmp." + i);
+        qDebug() << nazwa;
+        zrodlaPlikowe[i].reset(new FileSource(nazwa.toStdString().c_str(), false));
+        zrodlaPlikowe[i]->Pump(4);
+        zrodlaPlikowe[i]->Get(kanal, 4);
+        zrodlaPlikowe[i]->Attach(new ChannelSwitch(przywracanie, std::string((char *)kanal.begin(), 4)));
+    }
+
+    while (zrodlaPlikowe[0]->Pump(256))
+        for (i=1; i<minimalneUczestnictwo; i++)
+            zrodlaPlikowe[i]->Pump(256);
+
+    for (i=0; i<minimalneUczestnictwo; i++)
+        zrodlaPlikowe[i]->PumpAll();
+    auto sek = wczytajZBufora(1,"out.");
+    return sek[0];
+}
+
+void Szyfrowanie::zapiszDoBufora(QByteArray dane) {
+    CryptoPP::StringSource ss( dane.toStdString(), true /*pumpAll*/, new CryptoPP::FileSink( "tmp") );
+}
+
+std::vector<QByteArray> Szyfrowanie::wczytajZBufora(int liczbaFragmentow, std::string prefix) {
+    std::vector<QByteArray> buf;
+    QString nazwa;
+    for(int i = 0; i < liczbaFragmentow; ++i ) {
+        if(i < 10)
+            nazwa = QString::fromStdString(prefix +"00" + std::to_string(i));
+        else if(i < 100)
+            nazwa = QString::fromStdString(prefix  + "0" + std::to_string(i));
+        else
+            nazwa = QString::fromStdString(prefix  + std::to_string(i));
+        std::string s;
+        CryptoPP::FileSource( nazwa.toStdString().c_str(), true, new StringSink( s ) );
+        buf.push_back( QByteArray::fromStdString(s));
+        std::cout << s << std::endl;
+    }
+    return buf;
 }

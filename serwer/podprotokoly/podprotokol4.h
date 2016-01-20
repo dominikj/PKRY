@@ -2,31 +2,26 @@
 #define PODPROTOKOL4_H
 #include "podprotokol.h"
 #include <QString>
-
+typedef std::deque<Uzytkownik*> UzytkLista;
 class Podprotokol4 : public Podprotokol
 {
 public:
     Podprotokol4(Szyfrowanie& szyf,Baza& baza);
     virtual bool wykonaj();
+    virtual bool wykonaj(Uzytkownik*,QByteArray);
     ~Podprotokol4();
+ std::vector<QString> oferty;
+ std::vector<QByteArray> fragmentyKlucza;
+ std::vector<QByteArray> fragmentyKluczaOdebrane;
+ UzytkLista* uzytkownicy;
+ Aukcja* aukcja;
+ Uzytkownik* firma;
+ bool wykonaj2(Uzytkownik*);
+ bool wykonaj3(Uzytkownik* uz,QByteArray dane);
+ bool wykonaj4();
+ bool wykonaj5(Uzytkownik* uz, QByteArray dane);
 
 private:
-    void podpisywanie_dokumentu();
-    void kodowanie_asymetryczne();
-    void odkodowanie_asymetryczne();
-    void weryfikacja_podpisu();
-    void generacja_PKG();
-    void generacja_stempla_czasowego();
-
-    QString SK_po; //czesc sekretu dla oferenta
-    QString oferty; //oferty dla firmy dla rozstrzygniecia aukcji
-    QString nr_aukcji; //znowu, jeśli nie zachowamy tego wczesniej
-    QString nr_zwyciezcy; //numer zwyciezcy aukcji
-    QString lista_ofert; //lista wszystkich ofert wzietych pod uwage
-    //takze swoj numer rejestracyjny i numer jako firmy tworzącej aukcje z podprot1 i 2
-
-
-
 };
 
 #endif // PODPROTOKOL4_H

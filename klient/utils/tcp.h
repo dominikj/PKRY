@@ -18,10 +18,11 @@ public:
     void zamknij();
     QByteArray odbierzLinie();
     QTcpSocket* const gniazdo() const { return _gniazdo;}
+    ~Tcp();
 protected:
     int _port;
     QString _adres;
-    QTcpSocket * _gniazdo;
+    QTcpSocket * _gniazdo = nullptr;
 };
 
 #endif // TCP_H

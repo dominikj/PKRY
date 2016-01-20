@@ -6,12 +6,12 @@
 #include <QHash>
 #include <QString>
 #include <QListWidgetItem>
-#include "nowaaukcja.h"
 #include "zlozoferte.h"
 #include "wybierzzwyciezce.h"
-#include "start.h"
+#include "gui/start.h"
+#include "gui/nowaaukcja.h"
+
 class Sterownik;
-class zlozOferte;
 namespace Ui {
 class OknoGlowne;
 }
@@ -25,11 +25,11 @@ public:
         QString numer_aukcji;
         QString nazwa_aukcji;
         QString opis_aukcji;
-        QDateTime data_rozpoczecia;
-        QDateTime data_zakonczenia;
-        QList<QString> lista_kryteriow;
+        QString data_zakonczenia;
+        QByteArrayList lista_kryteriow;
     };
     explicit OknoGlowne(QWidget *parent, Sterownik& ster, Start& st);
+    OczekujZwyciezcy* ocz = nullptr;
     NowaAukcja *nowa;
     zlozOferte *oknooferty;
     WybierzZwyciezce *wyborzwyciezcy;
@@ -49,6 +49,7 @@ public slots:
     void wybierz_zwyciezce_wyswietl_okno(QString wZ);
 
 private slots:
+    void przyszlyOferty(QString);
     void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
     void on_pushButton_2_clicked();
     void on_pushButton_clicked();

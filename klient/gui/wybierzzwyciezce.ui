@@ -18,7 +18,7 @@
     <rect>
      <x>20</x>
      <y>30</y>
-     <width>371</width>
+     <width>481</width>
      <height>16</height>
     </rect>
    </property>
@@ -65,13 +65,13 @@
     <string>Numer oferenta:</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>500</y>
      <width>501</width>
-     <height>25</height>
+     <height>33</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">

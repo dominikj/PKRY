@@ -2,11 +2,11 @@
 #include "oczekujzwyciezcy.h"
 Sterownik::Sterownik() : _gui(*this)
 {
-_gui.uruchom();
+    _gui.uruchom();
 
 }
 
-void Sterownik::ustawDaneLogSer(QString login, QString haslo, QString adres, int port){
+void Sterownik::ustawDaneLogSer(QString login, QString haslo, QString adres, int port) {
     _port = port;
     _adres = adres;
     _baza.nazwaUzytkownika = login;
@@ -14,62 +14,83 @@ void Sterownik::ustawDaneLogSer(QString login, QString haslo, QString adres, int
     przygotowanie();
 }
 
-void Sterownik::przygotowanie(){
+void Sterownik::przygotowanie() {
     // TODO: zabezpieczyć przed potencjalnym wyciekiem pamięci, przejść np. na wake_ptr
-    _tcp = new ProxyTcp(_port, _adres,_szyfr);
-    _podprot1 = new Podprotokol1(_szyfr,*_tcp,_baza);
-    connect(_podprot1,SIGNAL(wyswietlKonsola(QString)),this,SLOT(daneDoKonsoli(QString)));
+    if(_tcp == nullptr) {
+        _tcp = new ProxyTcp(_port, _adres,_szyfr);
+        _podprot1 = new Podprotokol1(_szyfr,*_tcp,_baza);
+        _podprot2 = new Podprotokol2(_szyfr,*_tcp,_baza);
+        _podprot3 = new Podprotokol3(_szyfr,*_tcp,_baza);
+        _podprot4 = new Podprotokol4(_szyfr,*_tcp,_baza);
+        connect(_podprot1,SIGNAL(wyswietlKonsola(QString)),this,SLOT(daneDoKonsoli(QString)));
+        connect(_podprot2,SIGNAL(wyswietlKonsola(QString)),this,SLOT(daneDoKonsoli(QString)));
+        connect(_podprot3,SIGNAL(wyswietlKonsola(QString)),this,SLOT(daneDoKonsoli(QString)));
+        connect(_podprot4,SIGNAL(wyswietlKonsola(QString)),this,SLOT(daneDoKonsoli(QString)));
+
+        czekZw = new OczekujZwyciezcy(_tcp,*this);
+    }
 }
 
-bool Sterownik::zaloguj(){
-   if ((_tcp->polacz()) && ( _podprot1->wykonaj())){
+bool Sterownik::zaloguj() {
+    if ((_tcp->polacz()) && ( _podprot1->wykonaj())) {
         return true;
-   }
-   else{
-       return false;
-}
-}
-
-bool Sterownik::wykonajPodProt2(QString _nowaAukcja)
-{
-    _podprot2 = new Podprotokol2(_szyfr, *_tcp, _baza); //FIXME
-
-    //scal, podpisz, zaszyfruj, wyslij, dostan potwierdzenie i zwroc je
+    }
+    else {
+        return false;
+    }
 }
 
-QString Sterownik::pobierzAukcje(){
-    _tcp->wyslij(QByteArray("GETAUCTIONS"));
-    QString dane = _tcp->odbierz();
-    return dane;
-}
-
-OczekujZwyciezcy* Sterownik::czekajNaZwyciezce(){
-    OczekujZwyciezcy* czekZw = new OczekujZwyciezcy(_tcp);
-
+OczekujZwyciezcy* Sterownik::czekajNaZwyciezce() {
+    _tcp->gniazdo()->readAll();
     QObject::connect(_tcp->gniazdo(),SIGNAL(readyRead()),czekZw,SLOT(czekajZwyciezcy()));
-
- /*   QObject::connect(czekZw,SIGNAL(alertZwyciezca(QString)),_gui._wyborzwyciezcy,SLOT(wyswietl_okno(QString)));
-    QObject::connect(_gui._wyborzwyciezcy,SIGNAL(info_dla_sterownika(QString,QString)),this,SLOT(wez_dane_zwyciezcy(QString,QString)));
-    QObject::connect(this,SIGNAL(odpowiedz_serwera(QString)),_gui._wyborzwyciezcy,SLOT(odpowiedz_serwera(QString))); */
     return czekZw;
 }
 
-/*void Sterownik::wez_dane_zwyciezcy(QString zwyciezca, QString inni)
-{
-    //TODO: te dane wyzej wysylamy GAPowi
-    //CZEKAMY NA ODPOWIEDZ I
-    //ODPOWIADAMY OKIENKU
-    QString odp = "";
- //   emit odpowiedz_serwera(odp);
-}*/
-void Sterownik::daneDoKonsoli(QString dane){
-    _konsola += "[" + QTime::currentTime().toString() + "] " + dane;
+void Sterownik::daneDoKonsoli(QString dane) {
+    _konsola += "[" + QTime::currentTime().toString() + "] " + dane +"\n";
     qDebug() << dane;
 }
-QString Sterownik::daneKonsola(){
+QString Sterownik::daneKonsola() {
     QString tmp = _konsola;
     _konsola.clear();
     return tmp;
 }
 
+bool Sterownik::dodajAukcje(QString nowaAukcja) {
+    _baza.oferta = nowaAukcja;
+    return  _podprot2->wykonaj();
+}
+
+std::vector<Aukcja>& Sterownik::pobierzAukcje() {
+    (dynamic_cast<ProxyTcp*>(_tcp))->wyslijSzyfrowane(_baza.kluczGAP,"GETAUCTIONS|");
+    QByteArray aukcje = _tcp->odbierz();
+    _baza.DostepneAukcje.clear();
+    if(aukcje == "") throw std::exception();
+    aukcje = aukcje.mid(0,aukcje.size()-2); // wyciecie ostatniego separatora
+    QByteArrayList aukcjeLista = aukcje.split(SEPARATOR2);
+    for(QByteArray auk : aukcjeLista) {
+        Aukcja obAuk;
+        QByteArrayList aukPola = auk.split(SEPARATOR1);
+        obAuk.numer = aukPola.at(0);
+        obAuk.dataZakonczenia = aukPola.at(1);
+        obAuk.parametry = aukPola.at(2);
+        obAuk.kluczPublicznyAucji = aukPola.at(3);
+        _baza.DostepneAukcje.push_back(obAuk);
+        qDebug() <<  obAuk.numer << obAuk.parametry;
+    }
+    return _baza.DostepneAukcje;
+}
+
+bool Sterownik::wyslijOferte(QString oferta, QString nrAukcji) {
+    _baza.oferta = oferta;
+    _baza.ofertaNumerAukcji = nrAukcji;
+    return _podprot3->wykonaj();
+}
+
+void Sterownik::czekajZwyciezcy(){
+    qDebug() << "TUTAJ";
+}
+void Sterownik::wyborZwyciezcy(QString odpowiedz){
+ _podprot4->odeslijZwyciezce(odpowiedz);
+}
 

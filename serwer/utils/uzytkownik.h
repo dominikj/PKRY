@@ -24,6 +24,7 @@ public slots:
 private:
  Tcp* _soc;
 public:
+ bool uzyte = false;
   unsigned int numerWew; // Nie zmieniać!
 
   QByteArray PKc;

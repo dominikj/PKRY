@@ -10,7 +10,7 @@
 #include "utils/tcp.h"
 #include "utils/szyfrowanie.h"
 #include "sterownik/sterownik.h"
-
+#include <QObject>
 
 QString OknoGlowne::ZMIENNA_ODSWIEZ = "ODŚWIEŻ...";
 QString OknoGlowne::nr_aktywnej_aukcji = "0";
@@ -26,7 +26,7 @@ OknoGlowne::OknoGlowne(QWidget *parent, Sterownik &ster, Start& st) :
     QList<QString> listaAukcji;
     pierwsze_miejsce_na_liscie_odswieza_liste_aukcji();
     QString test = "nr_aukcji=101;nazwa=Test struktury aukcji;opis=Ten przetarg ma za zadanie sprawdzic, czy taka struktura danych moze bezbolesnie istniec. Lorem ipsum, costam costam.;data_roz=03:01:2016 18:26:35;data_zak=03:01:2016 18:31:35;kryteria={uroda,wdziek,powab,sila,masa,biala,rasa,dobre uczynnki,bicek,kolor,folklor,ksztalt,zapach}::nr_aukcji=291;nazwa=Budowa mostu Krasińskiego;opis=Budowa mostu Krasińskiego. Cena 90%, liczba ofert 5%, czas 5%.;data_roz=03:01:2016 18:26:35;data_zak=03:02:2016 18:31:35;kryteria={cena,liczba ofert w ostatnich dwóch latach,czas wykonania}";
-    zapelnij_liste_aukcji(test);
+  //  zapelnij_liste_aukcji(test);
 }
 
 OknoGlowne::~OknoGlowne()
@@ -37,6 +37,7 @@ OknoGlowne::~OknoGlowne()
 void OknoGlowne::uruchom(bool t)
 {
     this->show();
+        ui->textEdit->insertPlainText(_sterownik.daneKonsola());
 }
 /**
  * @brief OknoGlowne::pierwsze_miejsce_na_liscie_odswieza_liste_aukcji
@@ -55,92 +56,55 @@ void OknoGlowne::pierwsze_miejsce_na_liscie_odswieza_liste_aukcji()
 
 void OknoGlowne::zapelnij_liste_aukcji(QString lista_aukcji)
 {
-    /*!
-     * Zapełnia listę dostępnych aukcji na podstawie danych pobranych z GAPa.
-     *
-     *
-     */
-    QStringList aukcje_lista = lista_aukcji.split("::");
-    for(int i = 0; i < aukcje_lista.count(); i++)
-    {
-        polaAukcji stuk = konwertuj_do_struktury(aukcje_lista[i]);
-        bazaAktywnychAukcji.insert(stuk.numer_aukcji,stuk);
-        QString wpis;
-        wpis = "(" + stuk.numer_aukcji + ") " + bazaAktywnychAukcji.value(stuk.numer_aukcji).nazwa_aukcji;
-        ui->listWidget->addItem(wpis);
-    }
-}
-
-OknoGlowne::polaAukcji OknoGlowne::konwertuj_do_struktury(QString wpis)
-{
-    polaAukcji struktura;
-    QStringList cieta_struktura = wpis.split(";");
-    for(int j = 0; j < cieta_struktura.count(); j++)
-    {
-        QStringList cieta_pozycja = cieta_struktura[j].split("=");
-        if (cieta_pozycja[0] == "nr_aukcji")
-        {
-            struktura.numer_aukcji = cieta_pozycja[1];
-        }
-        else if(cieta_pozycja[0] == "nazwa")
-        {
-            struktura.nazwa_aukcji = cieta_pozycja[1];
-        }
-        else if(cieta_pozycja[0] == "opis")
-        {
-            struktura.opis_aukcji = cieta_pozycja[1];
-        }
-        else if(cieta_pozycja[0] == "data_roz")
-        {
-            struktura.data_rozpoczecia = QDateTime::fromString(cieta_pozycja[1],QString("dd:MM:yyyy hh:mm:ss"));
-        }
-        else if(cieta_pozycja[0] == "data_zak")
-        {
-            struktura.data_zakonczenia  = QDateTime::fromString(cieta_pozycja[1],QString("dd:MM:yyyy hh:mm:ss"));
-        }
-        else if(cieta_pozycja[0] == "kryteria")
-        {
-            QString wyciete_nawiasy = cieta_pozycja[1].mid(1,cieta_pozycja[1].count()-2);
-            QStringList pociete_kryteria = wyciete_nawiasy.split(",");
-            for(int i = 0; i < pociete_kryteria.count();i++)
-            {
-                struktura.lista_kryteriow.append(pociete_kryteria[i]);
-            }
-        }
-    }
-    return struktura;
 }
 
 void OknoGlowne::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 {
+    ui->textEdit->insertPlainText(_sterownik.daneKonsola());
+    ui->textEdit->repaint();
+    if(ocz != nullptr)
+    ocz->blokada = true; // teraz nie nasłuchujemy ofert/ogłoszenia zwycięzcy
+    //FIXME: Teraz to za każdym razem pobieram od nowa dane, czy klikam na odśwież, czy na inną pozycję (chociaż w bazie mam zapisane aukcje... ale nie ma czasu w tym momencie na to)
+    std::vector<Aukcja> aukcje;
     ui->plainTextEdit->clear();
-    if(item->text() == OknoGlowne::ZMIENNA_ODSWIEZ)
-    {
-//        try{
-//            zapelnij_liste_aukcji(_sterownik.pobierzAukcje());
-//        }
-//        catch(...)
-//        {
-//            QMessageBox::critical(this,"Ojoj","Prawdopodobnie brak połączenia :(");
-//        }
+    nr_aktywnej_aukcji = "0";
+    try{  aukcje =  _sterownik.pobierzAukcje();}
+    catch(...){
+        return;
     }
-    else
+
+    QString itemText;
+    if((itemText= item->text()) == ZMIENNA_ODSWIEZ)
     {
-      QString nr_aukcji = item->text().mid(1,item->text().indexOf(")")-1);
-      OknoGlowne::nr_aktywnej_aukcji = nr_aukcji;
-      ui->plainTextEdit->insertPlainText("Nazwa aukcji: " + bazaAktywnychAukcji.value(nr_aukcji).nazwa_aukcji + "\n");
-      ui->plainTextEdit->insertPlainText("Opis aukcji: " + bazaAktywnychAukcji.value(nr_aukcji).opis_aukcji + "\n");
-      ui->plainTextEdit->insertPlainText("Data rozpoczęcia: " + bazaAktywnychAukcji.value(nr_aukcji).data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + "\n");
-      ui->plainTextEdit->insertPlainText("Data zakończenia: " + bazaAktywnychAukcji.value(nr_aukcji).data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + "\n");
-      ui->plainTextEdit->insertPlainText("Kryteria:");
-      ui->plainTextEdit->insertPlainText("\n");
-      foreach(QString kryt, bazaAktywnychAukcji.value(nr_aukcji).lista_kryteriow)
-      {
-        ui->plainTextEdit->insertPlainText("*" + kryt + "\n");
+        ui->listWidget->clear();
+        ui->listWidget->addItem(ZMIENNA_ODSWIEZ);
+    }
+
+    for(auto au : aukcje){
+    auto dane = au.parametry;
+    QByteArrayList pola = dane.split(';');
+     if( itemText == ZMIENNA_ODSWIEZ){
+              ui->listWidget->addItem("(" + au.numer + ")" + pola.at(0).split('=').at(1));
       }
-      ui->plainTextEdit->insertPlainText("\n");
-      ui->plainTextEdit->insertPlainText("Numer aukcji: " + bazaAktywnychAukcji.value(nr_aukcji).numer_aukcji);
+     else if (itemText.split(")").at(0).mid(1,-1) == au.numer ){
+         nr_aktywnej_aukcji = au.numer;
+         polaAukcji pAukc;
+         pAukc.numer_aukcji = nr_aktywnej_aukcji;
+         pAukc.nazwa_aukcji = pola.at(0).split('=').at(1);
+     ui->plainTextEdit->insertPlainText("Nazwa aukcji: " +  pAukc.nazwa_aukcji  + "\n");
+         pAukc.opis_aukcji = pola.at(1).split('=').at(1);
+     ui->plainTextEdit->insertPlainText("Opis aukcji: " +  pAukc.opis_aukcji + "\n");
+     pAukc.data_zakonczenia =  pola.at(2).split('=').at(1);
+     ui->plainTextEdit->insertPlainText("Data zakończenia: " +  pAukc.data_zakonczenia + "\n");
+     pAukc.lista_kryteriow = pola.at(3).split('=').at(1).mid(1,pola.at(3).split('=').at(1).size() -2).split(',');
+     ui->plainTextEdit->insertPlainText("Kryteria:" + pola.at(3).split('=').at(1));
+     ui->plainTextEdit->insertPlainText("\n");
+     bazaAktywnychAukcji.clear();
+     bazaAktywnychAukcji.insert(nr_aktywnej_aukcji, pAukc);
+     }
     }
+    if(ocz != nullptr)
+     ocz->blokada = false;
 }
 
 void OknoGlowne::on_pushButton_2_clicked()
@@ -149,11 +113,9 @@ void OknoGlowne::on_pushButton_2_clicked()
      * Odpowiada za obsługę kliknięć tworzących nowe przetargi.
      *
      */
-//    NowaAukcja dodaj_aukcje(this);
-//    dodaj_aukcje.setModal(true);
-    nowa = new NowaAukcja();
-    nowa->setModal(true);
+    nowa = new NowaAukcja(_sterownik,0);
     connect(nowa,SIGNAL(nowa_aukcja(polaAukcji)),this,SLOT(zlap_nowa_aukcje(polaAukcji)));
+    nowa->setModal(true);
     nowa->exec();
 
 }
@@ -162,13 +124,21 @@ void OknoGlowne::zlap_nowa_aukcje(polaAukcji pA)
 {
     /*!
       * Przechwytuje dane z okna dialogowego do stworzenia aukcji.
-      */
-    ui->plainTextEdit->insertPlainText(pA.nazwa_aukcji);
-    ui->plainTextEdit->insertPlainText("\n");
-    ui->plainTextEdit->insertPlainText(pA.opis_aukcji);
-    QString _nowaAukcja = przygotuj_dane_aukcji_do_wyslania(pA);
-    if(_sterownik.wykonajPodProt2(_nowaAukcja) == true)
-        QMessageBox::information(this,"OK","Aukcja dodana");
+*/
+  /*  qDebug() << "ZLAPALEM"; - Wywala cały system XD */
+    ui->textEdit->insertPlainText(_sterownik.daneKonsola());
+    ui->textEdit->repaint();
+    ui->pushButton_2->setEnabled(false);
+        ui->pushButton_2->repaint();
+        ui->pushButton->setEnabled(false);
+            ui->pushButton->repaint();
+        ocz= _sterownik.czekajNaZwyciezce();
+        ocz->czyFirma = true;
+        connect(ocz, SIGNAL(alertZwyciezca(QString)), this, SLOT(przyszlyOferty(QString)));
+
+  //  QString nowaAukcja = przygotuj_dane_aukcji_do_wyslania(pA);
+
+
 }
 
 void OknoGlowne::on_pushButton_clicked()
@@ -176,6 +146,8 @@ void OknoGlowne::on_pushButton_clicked()
     /*!
      * Przygotowuje dialog z możliwością złożenia oferty
      */
+    //QString of = "nr_aukcji=213123::nr_uczes=1232112;nr_of=32423423;kryt1=sdfsdfs;kryt2=ssdfsdf";
+
     if(OknoGlowne::nr_aktywnej_aukcji != "0")
     {
         oknooferty = new zlozOferte();
@@ -190,11 +162,20 @@ void OknoGlowne::on_pushButton_clicked()
 
 void OknoGlowne::zlap_nowa_oferte(QString of)
 {
-    QMessageBox::critical(this,"Oj",of);
-
-    //tutaj przerzucic do sterownika i dalej
-    //if odpowiedz od serwera ok (albo nie)
-    emit odpowiedz_serwera("Nie zlozysz oferty serwerowi, ktorego nie ma.",false);
+    ui->textEdit->insertPlainText(_sterownik.daneKonsola());
+    ui->textEdit->repaint();
+   if (_sterownik.wyslijOferte(of,nr_aktywnej_aukcji)){
+       ui->pushButton->setEnabled(false);
+           ui->pushButton->repaint();
+           ui->pushButton_2->setEnabled(false);
+               ui->pushButton_2->repaint();
+       QMessageBox::information(this,"OK","Zaakceptowano ofertę");
+    ocz= _sterownik.czekajNaZwyciezce();
+    ocz->czyFirma = false;
+    connect(ocz, SIGNAL(alertZwyciezca(QString)), this, SLOT(przyszlyOferty(QString)));
+   }
+   else
+     QMessageBox::critical(this,"Bład","Odrzucono ofertę");
 }
 
 void OknoGlowne::on_pushButton_3_clicked()
@@ -213,8 +194,8 @@ QString OknoGlowne::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
     QString wynik;
     wynik = wynik + "nazwa=" + pA.nazwa_aukcji + ";";
     wynik = wynik + "opis=" + pA.opis_aukcji + ";";
-    wynik = wynik + "data_roz=" + pA.data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
-    wynik = wynik + "data_zak=" + pA.data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
+    //wynik = wynik + "data_roz=" + pA.data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
+    wynik = wynik + "data_zak=" + pA.data_zakonczenia + ";";
     wynik = wynik + "kryteria={";
     for(int i = 0; i < pA.lista_kryteriow.count();i++)
     {
@@ -235,4 +216,13 @@ void OknoGlowne::wybierz_zwyciezce_wyswietl_okno(QString wZ)
     wyborzwyciezcy = new WybierzZwyciezce();
     wyborzwyciezcy->setModal(true);
     wyborzwyciezcy->exec();
+}
+void OknoGlowne::przyszlyOferty(QString oferty){
+       if (ocz->czyFirma){
+           wyborzwyciezcy = new WybierzZwyciezce();
+            connect(wyborzwyciezcy,SIGNAL(info_dla_sterownika(QString)),&_sterownik,SLOT(wyborZwyciezcy(QString)));
+              wyborzwyciezcy->wyswietl_okno(_sterownik.oferty());
+           wyborzwyciezcy->setModal(true);
+           wyborzwyciezcy->exec();
+       }
 }

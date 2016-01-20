@@ -11,6 +11,7 @@ class Tcp: public QObject
 public:
     Tcp(QTcpSocket* gniazdo): _gniazdo(gniazdo){
     }
+ virtual  ~Tcp();
     void wyslij(QByteArray);
     QByteArray odbierz();
     void zamknij();

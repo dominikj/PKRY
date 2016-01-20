@@ -2,31 +2,23 @@
 #define PODPROTOKOL4_H
 #include "podprotokol.h"
 #include <QString>
+#include "utils/proxytcp.h"
+#define SZYFR_TCP (dynamic_cast<ProxyTcp*>(&_tcp))
 
-class Podprotokol4 : public Podprotokol
+class Podprotokol4 : public QObject, public Podprotokol
 {
+    Q_OBJECT
 public:
     Podprotokol4(Szyfrowanie& szyf, Tcp& tcp, Baza& baza);
     virtual bool wykonaj();
+    bool wykonajUczestnik();
+    bool wykonajFirma();
+    bool czekajNaOferty();
+    bool odeslijZwyciezce(QString);
+    bool odbierzWynik();
     ~Podprotokol4();
 
 private:
-    void podpisywanie_dokumentu();
-    void kodowanie_asymetryczne();
-    void odkodowanie_asymetryczne();
-    void weryfikacja_podpisu();
-    void generacja_PKG();
-    void generacja_stempla_czasowego();
-
-    QString SK_po; //czesc sekretu dla oferenta
-    QString oferty; //oferty dla firmy dla rozstrzygniecia aukcji
-    QString nr_aukcji; //znowu, jeśli nie zachowamy tego wczesniej
-    QString nr_zwyciezcy; //numer zwyciezcy aukcji
-    QString lista_ofert; //lista wszystkich ofert wzietych pod uwage
-    //takze swoj numer rejestracyjny i numer jako firmy tworzącej aukcje z podprot1 i 2
-
-
-
 };
 
 #endif // PODPROTOKOL4_H

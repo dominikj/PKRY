@@ -21,11 +21,11 @@ void zlozOferte::przygotuj()
     ui->tableWidget->setColumnCount(2);
 }
 
-void zlozOferte::wez_dane_aukcji(QString nr_aukcji, QString nazwa_aukcji, QDateTime data_zak, QList<QString> kryteria)
+void zlozOferte::wez_dane_aukcji(QString nr_aukcji, QString nazwa_aukcji, QString data_zak, QByteArrayList kryteria)
 {
     numer_aukcji = nr_aukcji;
     ui->label_2->setText(nazwa_aukcji);
-    ui->label_4->setText(data_zak.toString(QString("dd:MM:yyyy hh:mm:ss")));
+    ui->label_4->setText(data_zak);
     ui->tableWidget->setRowCount(kryteria.count());
     for(int i = 0; i < kryteria.count(); i++)
     {
@@ -64,7 +64,7 @@ void zlozOferte::on_pushButton_clicked()
     }
     if(czy_wszystko_wpisane == true)
     {
-        oferta = "nr_aukcji=" + numer_aukcji + "::";
+   //     oferta = "nr_aukcji=" + numer_aukcji + "::";
         for(int i = 0; i < liczba_wierszy; i++){
             if(i == liczba_wierszy-1)
             {
@@ -73,13 +73,10 @@ void zlozOferte::on_pushButton_clicked()
             else
                 oferta = oferta + ui->tableWidget->item(i,0)->text() + "=" + ui->tableWidget->item(i,1)->text() + "::";
         }
-        /*
-         * W TYM MIEJSCU TRZEBA PRZEKAZAĆ DANE DO SERWERA I POCZEKAC, CZY NASZA OFERTA ZOSTAŁA PRZYJĘTA
-         * oferta - OFo podprotokol nr 3
-         */
-        //QMessageBox::critical(this,"Oj",oferta);
+
+        QMessageBox::critical(this,"Składana oferta",oferta);
         emit skladanie_oferty(oferta);
-//        this->close();
+        this->close();
     }
 }
 

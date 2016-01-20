@@ -1,13 +1,16 @@
 #include "podprotokol1.h"
 #include <ctime>
-#include <QFile>
 #include "utils/proxytcp.h"
-#define SZYFR_TCP (dynamic_cast<ProxyTcp*>(&_tcp))
+#include "QDateTime"
 
 Podprotokol1::Podprotokol1(Szyfrowanie& szyf, Tcp& tcp, Baza& baza) : Podprotokol(szyf, tcp, baza) {}
-
+/**
+  Wykonuje scenariusz podprotokołu 1 po stronie klienta (logowanie)
+ * @brief Podprotokol1::wykonaj
+ * @return sukces/porażka operacji
+ */
 bool Podprotokol1::wykonaj() {
-    emit wyswietlKonsola(QString("Wykonuje podprot1"));
+    emit wyswietlKonsola(QString("Logowanie"));
 
     QString tmp = "USER=" + _baza.nazwaUzytkownika + SEPARATOR1 + "PASSWD=" + _baza.haslo;
 
@@ -18,19 +21,18 @@ bool Podprotokol1::wykonaj() {
     QByteArray dane = SZYFR_TCP->odbierzLinie();
     if(dane != "OK\n") return false;
 
-      dane = SZYFR_TCP->odbierzSzyfrowane(_baza.SKcca);
-     QByteArray daneZwrotneCalosc;
-     podziel(dane,daneZwrotneCalosc,podpis);
-         qDebug() << dane;
-      QByteArrayList daneZwrotneLista = daneZwrotneCalosc.split(SEPARATOR1);
-    if(_szyfrowanie.sprawdzPodpis(_baza.kluczGAP,podpis,daneZwrotneCalosc)){
-  qDebug() <<  ( _baza.numerRejestracyjny = daneZwrotneLista.at(0));
-  qDebug() <<  (_baza.czasWygenKluczy = daneZwrotneLista.at(1));
-  qDebug() <<  (_baza.KluczPrywatny = daneZwrotneLista.at(2));
-  qDebug() <<  (_baza.kluczPubliczny = daneZwrotneLista.at(3));
-    return true;
+    dane = SZYFR_TCP->odbierzSzyfrowane(_baza.SKcca);
+    QByteArray daneZwrotneCalosc;
+    podziel(dane,daneZwrotneCalosc,podpis);
+    QByteArrayList daneZwrotneLista = daneZwrotneCalosc.split(SEPARATOR1);
+    if(_szyfrowanie.sprawdzPodpis(_baza.kluczGAP,podpis,daneZwrotneCalosc)) {
+        emit wyswietlKonsola  ("Numer rejestracyjny: " + (_baza.numerRejestracyjny = daneZwrotneLista.at(0)));
+        emit wyswietlKonsola ("Czas ważności kluczy: " + (_baza.czasWygenKluczy = daneZwrotneLista.at(1)));
+        emit wyswietlKonsola  ("Indywidualny klucz prywatny: " + ( _baza.KluczPrywatny = daneZwrotneLista.at(2)));
+        emit wyswietlKonsola("Indywidualny klucz publiczny: "+ (_baza.kluczPubliczny = daneZwrotneLista.at(3)));
+        return true;
     }
+    return false; //TODO: Poprawić jeden if w serwerze
 
-    return true;
 }
 

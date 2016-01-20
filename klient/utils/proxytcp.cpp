@@ -19,12 +19,15 @@ void ProxyTcp::wyslijSzyfrowane(QString klucz, QByteArray dane) {
 }
 
 QByteArray ProxyTcp::odbierzSzyfrowane(QString klucz) {
+    if(debug)
+    qDebug() <<odbierz();
     while(odbierz() != "START");
     wyslij("OK");
     QByteArray dane;
     QByteArray wiadomosc;
     while((dane = odbierz()) != "END") {
         qDebug() << dane;
+        if(!debug)
         wiadomosc += _szyfr.deszyfruj(klucz, dane);
         _gniazdo->write("OK");
     }

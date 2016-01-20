@@ -5,11 +5,19 @@
 #include <botan/botan.h>
 #include <botan/rsa.h>
 #include <botan/look_pk.h>
+#include <ida.h>
+#include <rng.h>
+#include <cryptlib.h>
+#include <randpool.h>
+#include <files.h>
+#include <simple.h>
+#include <filters.h>
 #define KLUCZ_ROZM 2048
 #define MAX_WIAD_ROZM 50
 using namespace Botan;
-
-struct Klucze{
+using namespace CryptoPP;
+//Podmienić z wersją z serwera
+struct Klucze {
     QByteArray publiczny;
     QByteArray prywatny;
 };
@@ -24,8 +32,12 @@ public:
     QByteArray deszyfruj(QString klucz, QByteArray dane);
     QByteArray podpisz(QString klucz, QByteArray dane);
     bool sprawdzPodpis(QString klucz,QByteArray podpis, QByteArray dane);
+    QByteArray przywrocSekret(int minimalneUczestnictwo);
+    std::vector<QByteArray> podzielSekret(int minimalneUczestnictwo, int liczbaUdzialow, QByteArray dane);
 private:
-      LibraryInitializer _init;
+    LibraryInitializer _init;
+    void zapiszDoBufora(QByteArray dane);
+    std::vector<QByteArray> wczytajZBufora(int liczbaFragmentow,std::string prefix);
 };
 
 #endif // SZYFROWANIE_H

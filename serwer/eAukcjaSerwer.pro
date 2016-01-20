@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     sterownik/sterownik.cpp \
     utils/proxytcp.cpp \
     utils/tcpserwer.cpp \
-    utils/uzytkownik.cpp
+    utils/uzytkownik.cpp \
+    utils/aukcja.cpp
 
 HEADERS  += podprotokoly/podprotokol1.h \
     utils/tcp.h \
@@ -37,12 +38,14 @@ HEADERS  += podprotokoly/podprotokol1.h \
     sterownik/sterownik.h \
     utils/proxytcp.h \
     utils/tcpserwer.h \
-    utils/uzytkownik.h
+    utils/uzytkownik.h \
+    utils/aukcja.h
 
 #FORMS    += gui/start.ui \
 
-INCLUDEPATH += .
+INCLUDEPATH +=/usr/include/crypto++
 INCLUDEPATH += /usr/include/botan-1.10/
+LIBS += -lcrypto++
 LIBS += -lbotan-1.10
 #LIBPATH += /root/Pobrane/Botan/
 CONFIG += c++11

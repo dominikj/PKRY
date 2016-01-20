@@ -1,8 +1,8 @@
 #ifndef GUI_H
 #define GUI_H
+#pragma once
 #include "start.h"
 #include "oknoglowne.h"
-#include "wybierzzwyciezce.h"
 class Sterownik;
 class GUI
 {

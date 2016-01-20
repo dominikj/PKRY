@@ -9,6 +9,7 @@
 #define SEPARATOR1 '\t'
 #define SEPARATOR2 '\r'
 #define SEPARATOR3 '|'
+
 class Podprotokol //klasa abstrakcyjna
 {
 public:

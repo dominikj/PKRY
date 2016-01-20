@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     podprotokoly/podprotokol4.cpp \
     sterownik/oczekujzwyciezcy.cpp \
     sterownik/sterownik.cpp \
-    utils/proxytcp.cpp
+    utils/proxytcp.cpp \
+    utils/aukcja.cpp
 
 HEADERS  += gui/start.h \
     podprotokoly/podprotokol1.h \
@@ -47,7 +48,8 @@ HEADERS  += gui/start.h \
     podprotokoly/podprotokol4.h \
     sterownik/oczekujzwyciezcy.h \
     sterownik/sterownik.h \
-    utils/proxytcp.h
+    utils/proxytcp.h \
+    utils/aukcja.h
 
 FORMS    += gui/start.ui \
     gui/oknoglowne.ui \
@@ -55,12 +57,15 @@ FORMS    += gui/start.ui \
     gui/zlozoferte.ui \
     gui/wybierzzwyciezce.ui
 
-INCLUDEPATH += .
+INCLUDEPATH +=/usr/include/crypto++
 INCLUDEPATH += /usr/include/botan-1.10/
 LIBS += -lbotan-1.10
+LIBS += -lcrypto++
+#QMAKE_CXXFLAGS += -isystem /usr/include/crypto++
+#QMAKE_CXXFLAGS += -isystem /usr/include/botan-1.10
+QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 #LIBPATH += /root/Pobrane/Botan/
 CONFIG += c++11
-
 DISTFILES += \
     struktury
 

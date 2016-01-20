@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QString>
 class Sterownik;
-class OknoGlowne;
 namespace Ui {
 class Start;
 }

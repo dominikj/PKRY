@@ -1,5 +1,4 @@
-#include "gui/start.h"
-#include "gui/oknoglowne.h"
+
 #include "sterownik/sterownik.h"
 #include <QApplication>
 

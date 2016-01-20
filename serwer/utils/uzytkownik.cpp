@@ -7,3 +7,4 @@ void Uzytkownik::koniecPoloczenia(){
 void Uzytkownik::daneWBuforze(){
     emit przyszyDane(this);
 }
+

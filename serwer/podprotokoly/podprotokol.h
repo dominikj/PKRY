@@ -10,6 +10,8 @@ class Uzytkownik;
 #define SEPARATOR1 '\t'
 #define SEPARATOR2 '\r'
 #define SEPARATOR3 '|'
+#define SZYFR_TCP(UZYT) (dynamic_cast<ProxyTcp*>(UZYT->poloczenie()))
+
 class Podprotokol //klasa abstrakcyjna
 {
 public:

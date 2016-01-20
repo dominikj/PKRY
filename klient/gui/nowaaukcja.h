@@ -1,11 +1,10 @@
 #ifndef NOWAAUKCJA_H
 #define NOWAAUKCJA_H
-
 #include <QDialog>
 #include <QString>
 #include <QDateTime>
 #include <QList>
-
+class Sterownik;
 namespace Ui {
 class NowaAukcja;
 }
@@ -24,9 +23,9 @@ public:
         QList<QString> lista_kryteriow;
     };
     polaAukcji pola_aukcji;
-    explicit NowaAukcja(QWidget *parent = 0);
+    explicit NowaAukcja( Sterownik& ster,QWidget *parent = 0);
     void zwrocPola(QString &test);
-//    QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
+    QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
     ~NowaAukcja();
 
 signals:
@@ -34,6 +33,7 @@ signals:
 
 
 private slots:
+
     void on_pushButton_3_clicked();
     void on_pushButton_clicked();
     void on_pushButton_4_clicked();
@@ -41,6 +41,7 @@ private slots:
 
 private:
     Ui::NowaAukcja *ui;
+    Sterownik& _ster;
 };
 
 #endif // NOWAAUKCJA_H

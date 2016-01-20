@@ -18,3 +18,6 @@ QByteArray Tcp::odbierzLinie(){
     _gniazdo->waitForReadyRead(TIMEOUT);
     return _gniazdo->readLine();
 }
+Tcp::~Tcp(){
+    _gniazdo->close();
+}

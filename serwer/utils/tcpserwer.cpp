@@ -9,3 +9,6 @@ void TcpSerwer::nowePoloczenie(){
      qDebug() << "Użytkownik: "<< tmp->numerWew<<" nawiązał połączenie";
     _uzytkLista.push_back(tmp);
 }
+TcpSerwer::~TcpSerwer(){
+    _serw->close();
+}

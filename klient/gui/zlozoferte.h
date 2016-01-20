@@ -5,8 +5,6 @@
 #include <QString>
 #include <QDateTime>
 #include <QList>
-#include "oknoglowne.h"
-class OknoGlowne;
 
 namespace Ui {
 class zlozOferte;
@@ -17,7 +15,7 @@ class zlozOferte : public QDialog
     Q_OBJECT
 
 public:
-    void wez_dane_aukcji(QString nr_aukcji, QString nazwa_aukcji, QDateTime data_zak, QList<QString> kryteria);
+    void wez_dane_aukcji(QString nr_aukcji, QString nazwa_aukcji, QString data_zak, QByteArrayList kryteria);
     explicit zlozOferte(QWidget *parent = 0);
     ~zlozOferte();
 
