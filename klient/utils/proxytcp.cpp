@@ -8,7 +8,7 @@ void ProxyTcp::wyslijSzyfrowane(QString klucz, QByteArray dane) {
     wyslij("START");
     t->setSingleShot(true);
     t->start(TIMEOUT);
-    while(odbierz() != "OK"){
+    while(odbierz() != "OK") {
         if(!t->remainingTime())
             throw std::exception();
     }
@@ -20,8 +20,8 @@ void ProxyTcp::wyslijSzyfrowane(QString klucz, QByteArray dane) {
         QByteArray porcja= dane.mid(i*MAX_WIAD_ROZM, j);
         daneZaszyfrowane = _szyfr.szyfruj(klucz,porcja);
         wyslij(daneZaszyfrowane);
-         t->start(TIMEOUT);
-        while(odbierz() != "OK"){
+        t->start(TIMEOUT);
+        while(odbierz() != "OK") {
             if(!t->remainingTime())
                 throw std::exception();
         }
@@ -35,8 +35,8 @@ void ProxyTcp::wyslijSzyfrowane(QString klucz, QByteArray dane) {
 QByteArray ProxyTcp::odbierzSzyfrowane(QString klucz) {
     QTimer* t = new QTimer();
     t->setSingleShot(true);
-     t->start(TIMEOUT);
-    while(odbierz() != "START"){
+    t->start(TIMEOUT);
+    while(odbierz() != "START") {
         if(!t->remainingTime())
             throw std::exception();
     }
