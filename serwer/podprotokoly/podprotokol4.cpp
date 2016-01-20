@@ -131,10 +131,15 @@ bool Podprotokol4::wykonaj5(Uzytkownik* uz, QByteArray dane){
    ogloszenie = zwyciezcaImie.toLatin1() + " numer: " + zwyciezcaNumer.toLatin1() + " numery pozostałych uczestników: " + tmp2 +"\n";
     //SZYFR_TCP(uz)->wyslij("ZWYCIEZCA\n");
     SZYFR_TCP(u)->wyslij(ogloszenie);
-    sleep(2);
            }
    }
    }
+
+   for (auto it = _baza.aukcje.begin(); it < _baza.aukcje.end(); ++it){
+        if(aukcja->numerAukcji == (*it)->numerAukcji)
+            _baza.aukcje.erase(it);
+   }
+
     qDebug() << "KONIEC";
    }
 }

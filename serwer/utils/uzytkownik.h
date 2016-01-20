@@ -35,8 +35,6 @@ public:
   QByteArray KluczPrywatny; //SKc
   QString czasWygenKluczy; //TNRc
 
-
- // Pola dla użytkownika, klucze, dane itp.
 };
 
 #endif // UZYTKOWNIK_H

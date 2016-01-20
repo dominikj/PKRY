@@ -4,6 +4,7 @@
 #include <QString>
 #include <map>
 #include "utils/aukcja.h"
+#include <deque>
 using namespace Botan;
 
 struct Baza
@@ -16,7 +17,7 @@ public:
 
     QByteArray kluczGAPPrywatny;
 
-    std::vector<Aukcja*> aukcje;
+    std::deque<Aukcja*> aukcje;
 
 private:
        std::map<QString,QString> _uzytkownicy;

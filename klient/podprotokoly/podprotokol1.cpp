@@ -18,10 +18,13 @@ bool Podprotokol1::wykonaj() {
     QByteArray podpis = _szyfrowanie.podpisz(_baza.SKcca, Dc);
     Dc = scal(Dc,podpis);
     SZYFR_TCP->wyslijSzyfrowane(_baza.kluczGAP,"PODPROTOKOL1|" +Dc);
+     qDebug() << "info";
     QByteArray dane = SZYFR_TCP->odbierzLinie();
+     qDebug() << "info";
     if(dane != "OK\n") return false;
 
     dane = SZYFR_TCP->odbierzSzyfrowane(_baza.SKcca);
+    qDebug() << "info";
     QByteArray daneZwrotneCalosc;
     podziel(dane,daneZwrotneCalosc,podpis);
     QByteArrayList daneZwrotneLista = daneZwrotneCalosc.split(SEPARATOR1);

@@ -5,8 +5,9 @@ bool Tcp::polacz()
     if(_gniazdo == nullptr){
         _gniazdo = new QTcpSocket(this);
         qDebug() <<"nowe połączenie";
-    }
+    }   if(!_gniazdo->isOpen()){
         _gniazdo->connectToHost(_adres, _port);
+    }
         if( _gniazdo->waitForConnected(200) ) {
             return true;
         }

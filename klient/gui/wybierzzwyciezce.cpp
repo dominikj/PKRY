@@ -31,7 +31,7 @@ void WybierzZwyciezce::przekaz_liste_ofert(QString string_lista_ofert)
         oferty.push_back(of);
         for(int j = 2; j < oferta.count(); j++)
         {
-            temp = temp + " " + oferta[j].split("=")[0] + ": " + oferta[j].split("=")[1];
+            temp = temp + " " + oferta[j].split("=")[0].replace("\e","::").replace("\v",";") + ": " + oferta[j].split("=")[1].replace("\e","::").replace("\v",";");
         }
         lista_ofert.append(temp); qDebug() << temp;
     }

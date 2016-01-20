@@ -84,20 +84,30 @@ void OknoGlowne::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     auto dane = au.parametry;
     QByteArrayList pola = dane.split(';');
      if( itemText == ZMIENNA_ODSWIEZ){
-              ui->listWidget->addItem("(" + au.numer + ")" + pola.at(0).split('=').at(1));
+         QString tmp = pola.at(0).split('=').at(1);
+         tmp = tmp.replace("\v",";");
+         tmp = tmp.replace("\e","::");
+              ui->listWidget->addItem("(" + au.numer + ")" + tmp);
       }
      else if (itemText.split(")").at(0).mid(1,-1) == au.numer ){
          nr_aktywnej_aukcji = au.numer;
          polaAukcji pAukc;
          pAukc.numer_aukcji = nr_aktywnej_aukcji;
          pAukc.nazwa_aukcji = pola.at(0).split('=').at(1);
+         pAukc.nazwa_aukcji = pAukc.nazwa_aukcji.replace("\v",";");
+             pAukc.nazwa_aukcji = pAukc.nazwa_aukcji.replace("\e","::");
      ui->plainTextEdit->insertPlainText("Nazwa aukcji: " +  pAukc.nazwa_aukcji  + "\n");
          pAukc.opis_aukcji = pola.at(1).split('=').at(1);
+         pAukc.opis_aukcji = pAukc.opis_aukcji.replace("\v",";");
+         pAukc.opis_aukcji = pAukc.opis_aukcji.replace("\e","::");
      ui->plainTextEdit->insertPlainText("Opis aukcji: " +  pAukc.opis_aukcji + "\n");
      pAukc.data_zakonczenia =  pola.at(2).split('=').at(1);
      ui->plainTextEdit->insertPlainText("Data zakończenia: " +  pAukc.data_zakonczenia + "\n");
      pAukc.lista_kryteriow = pola.at(3).split('=').at(1).mid(1,pola.at(3).split('=').at(1).size() -2).split(',');
-     ui->plainTextEdit->insertPlainText("Kryteria:" + pola.at(3).split('=').at(1));
+     QString tmp = pola.at(3).split('=').at(1);
+     tmp = tmp.replace("\v",",");
+     tmp = tmp.replace("\e","::");
+     ui->plainTextEdit->insertPlainText("Kryteria:" + tmp);
      ui->plainTextEdit->insertPlainText("\n");
      bazaAktywnychAukcji.clear();
      bazaAktywnychAukcji.insert(nr_aktywnej_aukcji, pAukc);
@@ -136,8 +146,6 @@ void OknoGlowne::zlap_nowa_aukcje(polaAukcji pA)
         ocz->czyFirma = true;
         connect(ocz, SIGNAL(alertZwyciezca(QString)), this, SLOT(przyszlyOferty(QString)));
 
-  //  QString nowaAukcja = przygotuj_dane_aukcji_do_wyslania(pA);
-
 
 }
 
@@ -146,7 +154,6 @@ void OknoGlowne::on_pushButton_clicked()
     /*!
      * Przygotowuje dialog z możliwością złożenia oferty
      */
-    //QString of = "nr_aukcji=213123::nr_uczes=1232112;nr_of=32423423;kryt1=sdfsdfs;kryt2=ssdfsdf";
 
     if(OknoGlowne::nr_aktywnej_aukcji != "0")
     {
@@ -194,7 +201,6 @@ QString OknoGlowne::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
     QString wynik;
     wynik = wynik + "nazwa=" + pA.nazwa_aukcji + ";";
     wynik = wynik + "opis=" + pA.opis_aukcji + ";";
-    //wynik = wynik + "data_roz=" + pA.data_rozpoczecia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
     wynik = wynik + "data_zak=" + pA.data_zakonczenia + ";";
     wynik = wynik + "kryteria={";
     for(int i = 0; i < pA.lista_kryteriow.count();i++)
@@ -224,5 +230,12 @@ void OknoGlowne::przyszlyOferty(QString oferty){
               wyborzwyciezcy->wyswietl_okno(_sterownik.oferty());
            wyborzwyciezcy->setModal(true);
            wyborzwyciezcy->exec();
+       }
+       else if(ocz->czyFirma == false){
+           ui->pushButton->setEnabled(true);
+               ui->pushButton->repaint();
+               ui->pushButton_2->setEnabled(true);
+               ui->pushButton_2->repaint();
+            disconnect(ocz,0,0,0);
        }
 }

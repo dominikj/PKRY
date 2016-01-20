@@ -95,12 +95,18 @@ QString NowaAukcja::przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA)
      * \brief wynik
      */
     QString wynik;
+     pA.nazwa_aukcji =  pA.nazwa_aukcji.replace(";","\v");
+      pA.nazwa_aukcji =  pA.nazwa_aukcji.replace("::","\e");
     wynik = wynik + "nazwa=" + pA.nazwa_aukcji + ";";
+    pA.opis_aukcji = pA.opis_aukcji.replace(";","\v");
+    pA.opis_aukcji = pA.opis_aukcji.replace("::","\e");
     wynik = wynik + "opis=" + pA.opis_aukcji + ";";
     wynik = wynik + "data_zak=" + pA.data_zakonczenia.toString(QString("dd:MM:yyyy hh:mm:ss")) + ";";
     wynik = wynik + "kryteria={";
     for(int i = 0; i < pA.lista_kryteriow.count();i++)
     {
+        pA.lista_kryteriow[i] = pA.lista_kryteriow[i].replace(",","\v");
+        pA.lista_kryteriow[i] = pA.lista_kryteriow[i].replace("::","\e");
         if (i == pA.lista_kryteriow.count()-1)
         {
             wynik = wynik + pA.lista_kryteriow[i];

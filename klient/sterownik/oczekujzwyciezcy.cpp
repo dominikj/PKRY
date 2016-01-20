@@ -5,7 +5,6 @@ void OczekujZwyciezcy::czekajZwyciezcy(){
     if(!blokada){
 
         qDebug() << "WYKONUJE";
-        //disconnect(_tcp,0,0,0);
         sleep(2);
        if(!czyFirma){
            if(!czyEtap2){
@@ -16,6 +15,9 @@ void OczekujZwyciezcy::czekajZwyciezcy(){
            else{
                 qDebug() << "TUTeeeJ";
                _ster.dajPodprot4()->odbierzWynik();
+               blokada = false;
+               disconnect(_tcp,0,0,0);
+               emit alertZwyciezca(QString(""));
            }
        }
        else {

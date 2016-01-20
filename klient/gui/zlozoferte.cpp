@@ -64,14 +64,13 @@ void zlozOferte::on_pushButton_clicked()
     }
     if(czy_wszystko_wpisane == true)
     {
-   //     oferta = "nr_aukcji=" + numer_aukcji + "::";
         for(int i = 0; i < liczba_wierszy; i++){
             if(i == liczba_wierszy-1)
             {
                 oferta = oferta + ui->tableWidget->item(i,0)->text() + "=" + ui->tableWidget->item(i,1)->text();
             }
             else
-                oferta = oferta + ui->tableWidget->item(i,0)->text() + "=" + ui->tableWidget->item(i,1)->text() + "::";
+                oferta = oferta + ui->tableWidget->item(i,0)->text() + "=" + ui->tableWidget->item(i,1)->text() + ";";
         }
 
         QMessageBox::critical(this,"Składana oferta",oferta);
