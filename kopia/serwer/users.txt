@@ -1,4 +1,0 @@
-alfons ww=wiki
-lodo hoo=testowe
-Wojtek=Takie
-Artut john=pic pic
