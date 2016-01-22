@@ -10,6 +10,10 @@ Szyfrowanie::Szyfrowanie()
 {
 
 }
+/**
+ * @brief generuje parę kluczy: publiczny i prywatny
+ * @return struktura kluczy
+ */
 Klucze Szyfrowanie::generujKlucze() {
     AutoSeeded_RNG rand;
     RSA_PrivateKey klucz(rand, KLUCZ_ROZM);
@@ -18,7 +22,12 @@ Klucze Szyfrowanie::generujKlucze() {
     Klucze klucze = {pub.toLatin1(), priv.toLatin1()};
     return klucze;
 }
-
+/**
+ * @brief Szyfruje dane
+ * @param klucz klucz szyfrujący
+ * @param dane dane do zaszyfrowania
+ * @return dane zaszyfrowane
+ */
 QByteArray Szyfrowanie::szyfruj(QString klucz, QByteArray dane) {
     AutoSeeded_RNG rand;
     DataSource_Memory kluczMem(klucz.toStdString());
@@ -39,7 +48,12 @@ QByteArray Szyfrowanie::szyfruj(QString klucz, QByteArray dane) {
     }
     return zaszyfrowanyTekst;
 }
-
+/**
+ * @brief deszyfruje dane
+ * @param klucz klucz deszyfrujący
+ * @param dane dane zaszyfrowane
+ * @return dane jawne
+ */
 QByteArray Szyfrowanie::deszyfruj(QString klucz, QByteArray dane) {
     AutoSeeded_RNG rand;
     DataSource_Memory kluczMem(klucz.toStdString());
@@ -61,7 +75,12 @@ QByteArray Szyfrowanie::deszyfruj(QString klucz, QByteArray dane) {
     return tekstJawny;
 
 }
-
+/**
+ * @brief generuje podpis danych
+ * @param klucz
+ * @param dane
+ * @return podpis
+ */
 QByteArray Szyfrowanie::podpisz(QString klucz, QByteArray dane) {
     AutoSeeded_RNG rand;
     DataSource_Memory kluczMem(klucz.toStdString());
@@ -83,7 +102,13 @@ QByteArray Szyfrowanie::podpisz(QString klucz, QByteArray dane) {
     return podpisTekst;
 
 }
-
+/**
+ * @brief sprawdza prawidłowość podpisu
+ * @param klucz
+ * @param podpis
+ * @param dane
+ * @return poprawny/niepoprawny podpis
+ */
 bool Szyfrowanie::sprawdzPodpis(QString klucz, QByteArray podpis, QByteArray dane) {
     DataSource_Memory kluczMem(klucz.toStdString());
     X509_PublicKey *kluczRsa = X509::load_key(kluczMem);
@@ -101,9 +126,15 @@ bool Szyfrowanie::sprawdzPodpis(QString klucz, QByteArray podpis, QByteArray dan
     bool jestPoprawny = verifier->verify_message(wiadomosc, sizeof(wiadomosc), pod, sizeof(pod));
     return jestPoprawny;
 }
-
+/**
+ * @brief Generuje podział danych wg algorytmu Shamira
+ * @param minimalneUczestnictwo
+ * @param liczbaUdzialow
+ * @param dane
+ * @return fragmenty danych
+ */
 std::vector<QByteArray> Szyfrowanie::podzielSekret(int minimalneUczestnictwo, int liczbaUdzialow, QByteArray dane) { // TODO: Przerobić tego potworka na coś porządnego
-    zapiszDoBufora(dane);
+    zapiszDoBufora(dane,QString("tmp"));
     std::string ziarno = std::to_string(std::time(NULL));
     ziarno.resize(16, ' ');
 
@@ -133,11 +164,24 @@ std::vector<QByteArray> Szyfrowanie::podzielSekret(int minimalneUczestnictwo, in
     return wczytajZBufora(liczbaUdzialow,"tmp.");
 
 }
-
-QByteArray Szyfrowanie::przywrocSekret(int minimalneUczestnictwo)
+/**
+ * @brief Scala dane wcześniej podzielone
+ * @param minimalneUczestnictwo
+ * @return scalone dane
+ */
+QByteArray Szyfrowanie::przywrocSekret(int minimalneUczestnictwo, std::vector<QByteArray> dane)
 {
-    SecretRecovery przywracanie(minimalneUczestnictwo, new FileSink("out.000"));
     QString nazwa;
+    for (int i=0; i<minimalneUczestnictwo; i++) {
+        if(i < 10)
+            nazwa = QString::fromStdString("tmp.00" + std::to_string(i));
+        else if(i < 100)
+            nazwa = QString::fromStdString("tmp.0" + i);
+        else
+            nazwa = QString::fromStdString("tmp." + i);
+        zapiszDoBufora(dane[i], nazwa);
+    }
+    SecretRecovery przywracanie(minimalneUczestnictwo, new FileSink("out.000"));
     CryptoPP::vector_member_ptrs<FileSource> zrodlaPlikowe(minimalneUczestnictwo);
     CryptoPP::SecByteBlock kanal(4);
     int i;
@@ -149,7 +193,6 @@ QByteArray Szyfrowanie::przywrocSekret(int minimalneUczestnictwo)
             nazwa = QString::fromStdString("tmp.0" + i);
         else
             nazwa = QString::fromStdString("tmp." + i);
-        qDebug() << nazwa;
         zrodlaPlikowe[i].reset(new FileSource(nazwa.toStdString().c_str(), false));
         zrodlaPlikowe[i]->Pump(4);
         zrodlaPlikowe[i]->Get(kanal, 4);
@@ -166,8 +209,9 @@ QByteArray Szyfrowanie::przywrocSekret(int minimalneUczestnictwo)
     return sek[0];
 }
 
-void Szyfrowanie::zapiszDoBufora(QByteArray dane) {
-    CryptoPP::StringSource ss( dane.toStdString(), true /*pumpAll*/, new CryptoPP::FileSink( "tmp") );
+
+void Szyfrowanie::zapiszDoBufora(QByteArray dane, QString nazwa) {
+    CryptoPP::StringSource ss( dane.toStdString(), true /*pumpAll*/, new CryptoPP::FileSink( nazwa.toStdString().c_str()) );
 }
 
 std::vector<QByteArray> Szyfrowanie::wczytajZBufora(int liczbaFragmentow, std::string prefix) {
@@ -183,7 +227,6 @@ std::vector<QByteArray> Szyfrowanie::wczytajZBufora(int liczbaFragmentow, std::s
         std::string s;
         CryptoPP::FileSource( nazwa.toStdString().c_str(), true, new StringSink( s ) );
         buf.push_back( QByteArray::fromStdString(s));
-        std::cout << s << std::endl;
     }
     return buf;
 }

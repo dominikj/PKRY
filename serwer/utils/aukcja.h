@@ -6,14 +6,18 @@
 #include <QTimer>
 
 class Uzytkownik;
-
+/**
+ * @brief sktuktura pojedynczej oferty
+ */
 struct Oferta{
     QString nazwaUczestnika;
     QByteArray oferta;
     QString numerUczestnika;
     bool uzyte = false;
 };
-
+/**
+ * @brief klasa pojedyczej aukcji
+ */
 class Aukcja : public QObject
 {
     Q_OBJECT

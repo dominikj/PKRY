@@ -13,15 +13,14 @@ Podprotokol1::Podprotokol1(Szyfrowanie& szyf, Baza& baza) : Podprotokol(szyf, ba
 }
 
 /**
-  Wykonuje scenariusz podprotokołu 1 po stronie serwera (logowanie)
- * @brief Podprotokol1::wykonaj
- * @param uz wskaźnik na obikekt urzytkownika
+ * @brief Wykonuje scenariusz podprotokołu 1 po stronie serwera (logowanie)
+ * @param uz wskaźnik na obiekt urzytkownika
  * @param dane odebrane dane
  * @return sukces/porażka operacji
  */
 
 bool Podprotokol1::wykonaj(Uzytkownik* uz, QByteArray dane) {
-    qDebug() << "Logowanie";
+    qDebug() << czas() <<"Logowanie";
 
     QByteArray daneLogowaniaCalosc, podpis;
     podziel(dane,daneLogowaniaCalosc,podpis);
@@ -30,32 +29,41 @@ bool Podprotokol1::wykonaj(Uzytkownik* uz, QByteArray dane) {
 
     QString nazwaUzytkownika = daneLogowaniaLista.at(0).split('=').at(1);
     QString haslo = daneLogowaniaLista.at(1).split('=').at(1);
-    qDebug() << "Uzytkownik: " << nazwaUzytkownika;
-    qDebug() << "Hasło:" << haslo;
+    qDebug() << czas() << "Uzytkownik: " << nazwaUzytkownika;
+    qDebug() << czas() << "Hasło:" << haslo;
     try {
         if (haslo ==_baza.pobierzHalso(nazwaUzytkownika)) {
             QString klucz = _baza.zaladujKluczUzytkownika(nazwaUzytkownika); //PKcca
             if(_szyfrowanie.sprawdzPodpis(klucz,podpis,daneLogowaniaCalosc) == true) {
                 uz->nazwa = nazwaUzytkownika;
                 uz->PKc = klucz.toLatin1(); //PKcca
-                qDebug() << "Użytkownik zalogowany!";
+                qDebug() << czas() << "Użytkownik zalogowany!";
                 QByteArray odpowiedz = przygotujOdpowiedz(uz);
                 (uz)->poloczenie()->wyslij("OK\n");
+                try{
                 SZYFR_TCP(uz)->wyslijSzyfrowane(uz->PKc,odpowiedz);
+                }
+                catch(...){
+                    qDebug() << czas() << "Wystąpił błąd transmisji";
+                    SZYFR_TCP(uz)->zamknij();
+                    return false;
+                }
+
                 return true;
             }
             else {
                 qDebug() << "Błędy podpis cyfrowy";
+                  SZYFR_TCP(uz)->wyslij("ERR\n");
                 return false;
             }
         }
         else
-            qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " istnieje, ale podał złe hasło";
+            qDebug() << czas() << "Użytkownik: "<<nazwaUzytkownika<< " istnieje, ale podał złe hasło";
         SZYFR_TCP(uz)->wyslij("ERR\n");
         return false;
     }
     catch(std::exception ex) {
-        qDebug() << "Użytkownik: "<<nazwaUzytkownika<< " nie istnieje!";
+        qDebug() << czas() << "Użytkownik: "<<nazwaUzytkownika<< " nie istnieje!";
         SZYFR_TCP(uz)->wyslij("ERR\n");
         return false;
     }

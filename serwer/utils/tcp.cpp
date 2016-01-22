@@ -1,23 +1,33 @@
 #include "tcp.h"
-
-void Tcp::wyslij(QByteArray dane){
-_gniazdo->write(dane);
+/**
+ * @brief wyślij dane przez połączenie tcp
+ * @param dane dane do wysłania
+ */
+void Tcp::wyslij(QByteArray dane) {
+    _gniazdo->write(dane);
 }
-
-QByteArray Tcp::odbierz(){
-  //FIXME: Nie można wysłać symbolu końca danych, więc skróciłem timeout :/ :/
+/**
+ * @brief odbiera dane z połączenia tcp
+ * @return dane odebrane
+ */
+QByteArray Tcp::odbierz() {
     _gniazdo->waitForReadyRead(TIMEOUT);
     return _gniazdo->readAll();
 }
-
-void Tcp::zamknij(){
+/**
+ * @brief zamyka połączenie tcp
+ */
+void Tcp::zamknij() {
     _gniazdo->close();
 }
-
-QByteArray Tcp::odbierzLinie(){
+/**
+ * @brief Odczytuje jedną linię z bufora połączenia
+ * @return dane odebrane
+ */
+QByteArray Tcp::odbierzLinie() {
     _gniazdo->waitForReadyRead(TIMEOUT);
     return _gniazdo->readLine();
 }
-Tcp::~Tcp(){
+Tcp::~Tcp() {
     _gniazdo->close();
 }

@@ -13,9 +13,10 @@ void Sterownik::ustawDaneLogSer(QString login, QString haslo, QString adres, int
     _baza.haslo = haslo;
     przygotowanie();
 }
-
+/**
+ * @brief Przygotowuje aplikację do pracy
+ */
 void Sterownik::przygotowanie() {
-    // TODO: zabezpieczyć przed potencjalnym wyciekiem pamięci, przejść np. na wake_ptr
     if(_tcp == nullptr) {
         _tcp = new ProxyTcp(_port, _adres,_szyfr);
         _podprot1 = new Podprotokol1(_szyfr,*_tcp,_baza);
@@ -26,26 +27,37 @@ void Sterownik::przygotowanie() {
         connect(_podprot2,SIGNAL(wyswietlKonsola(QString)),this,SLOT(daneDoKonsoli(QString)));
         connect(_podprot3,SIGNAL(wyswietlKonsola(QString)),this,SLOT(daneDoKonsoli(QString)));
         connect(_podprot4,SIGNAL(wyswietlKonsola(QString)),this,SLOT(daneDoKonsoli(QString)));
+        _czekZw = new OczekujZwyciezcy(_tcp,*this);
+        _czekZw->blokada = true;
 
-        czekZw = new OczekujZwyciezcy(_tcp,*this);
     }
 }
-
+/**
+ * @brief logowanie użytkownika
+ * @return
+ */
 bool Sterownik::zaloguj() {
     if ((_tcp->polacz()) && ( _podprot1->wykonaj())) {
+             QObject::connect(_tcp->gniazdo(),SIGNAL(readyRead()),_czekZw,SLOT(czekajZwyciezcy()));
         return true;
     }
     else {
         return false;
     }
 }
-
+/**
+ * @brief czeka na zwycięzcę
+ * @return
+ */
 OczekujZwyciezcy* Sterownik::czekajNaZwyciezce() {
     _tcp->gniazdo()->readAll();
-    QObject::connect(_tcp->gniazdo(),SIGNAL(readyRead()),czekZw,SLOT(czekajZwyciezcy()));
-    return czekZw;
+    _czekZw->blokada = false;
+    return _czekZw;
 }
-
+/**
+ * @brief przygotowuje informacje do wyświetlenia w konsoli
+ * @param dane
+ */
 void Sterownik::daneDoKonsoli(QString dane) {
     _konsola += "[" + QTime::currentTime().toString() + "] " + dane +"\n";
     qDebug() << dane;
@@ -55,13 +67,20 @@ QString Sterownik::daneKonsola() {
     _konsola.clear();
     return tmp;
 }
-
+/**
+ * @brief wykonuje przesłanie nowej aukcji
+ * @param nowaAukcja ogłaszany przetarg
+ * @return sukces/porażka
+ */
 bool Sterownik::dodajAukcje(QString nowaAukcja) {
     _baza.oferta = nowaAukcja;
     return  _podprot2->wykonaj();
 }
-
-std::vector<Aukcja>& Sterownik::pobierzAukcje() {
+/**
+ * @brief pobiera aukcje z serwera
+ * @return aukcje
+ */
+std::vector<Aukcja>& Sterownik::pobierzAukcjeZSerwera() {
     (dynamic_cast<ProxyTcp*>(_tcp))->wyslijSzyfrowane(_baza.kluczGAP,"GETAUCTIONS|");
     QByteArray aukcje = _tcp->odbierz();
     _baza.DostepneAukcje.clear();
@@ -80,17 +99,29 @@ std::vector<Aukcja>& Sterownik::pobierzAukcje() {
     }
     return _baza.DostepneAukcje;
 }
-
+/**
+ * @brief Pobiera aukcje z lokalnej bazy
+ * @return aukcje
+ */
+std::vector<Aukcja>& Sterownik::pobierzAukcje() {
+    return _baza.DostepneAukcje;
+}/**
+ * @brief wysyła ofertę do gapa
+ * @param oferta
+ * @param nr aukcji
+ * @return sukces/porażka
+ */
 bool Sterownik::wyslijOferte(QString oferta, QString nrAukcji) {
     _baza.oferta = oferta;
     _baza.ofertaNumerAukcji = nrAukcji;
     return _podprot3->wykonaj();
 }
-
-void Sterownik::czekajZwyciezcy(){
-    qDebug() << "TUTAJ";
-}
-void Sterownik::wyborZwyciezcy(QString odpowiedz){
- _podprot4->odeslijZwyciezce(odpowiedz);
+/**
+ * @brief odsyła zwycięzcę do gapa
+ * @param zwycięzca
+ */
+void Sterownik::wyborZwyciezcy(QString odpowiedz) {
+    _czekZw->blokada = true;
+    _podprot4->odeslijZwyciezce(odpowiedz);
 }
 

@@ -1,10 +1,11 @@
 #ifndef BAZA_H
 #define BAZA_H
-#include <botan/botan.h>
 #include <QString>
 #include"utils/aukcja.h"
 
-using namespace Botan;
+/**
+ * @brief Klasa bazy danych potrzebnych do komunikacji
+ */
 
 struct Baza
 {
@@ -22,11 +23,8 @@ public:
 
     //2
     //TODO: dodać pola przechowujace warunki naszego przetargu WPf
-    QString warunkiPrzetargu;
     QByteArray czescKluczaPrzetargu; //SKp(f) lub SKp(o)
     QString numerFirmy; //Nf
-    QString numerAukcji; //Np
-    QString kluczPublicznyPrzetargu; //PKp <- ten tylko dla składającej ofertę
 
     std::vector<Aukcja> DostepneAukcje;
 
@@ -38,11 +36,7 @@ public:
      //TODO: dodać pola przechowujace ofertę oferenta
 
     //4
-    QString czescKluczaPrzetarguOferenta;
     QString ofertyDoRozpatrzenia;
-    QString numerAukcjiRozpatrywanej;
-    QString numerZwyciezcyAukcji;
-    QString listaOfertRozpatrywanych;
 };
 
 #endif // BAZA_H

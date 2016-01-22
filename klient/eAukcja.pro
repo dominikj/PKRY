@@ -57,12 +57,12 @@ FORMS    += gui/start.ui \
     gui/zlozoferte.ui \
     gui/wybierzzwyciezce.ui
 
-INCLUDEPATH +=/usr/include/crypto++
-INCLUDEPATH += /usr/include/botan-1.10/
+#INCLUDEPATH +=/usr/include/crypto++
+#INCLUDEPATH += /usr/include/botan-1.10/
 LIBS += -lbotan-1.10
 LIBS += -lcrypto++
-#QMAKE_CXXFLAGS += -isystem /usr/include/crypto++
-#QMAKE_CXXFLAGS += -isystem /usr/include/botan-1.10
+QMAKE_CXXFLAGS += -isystem /usr/include/crypto++
+QMAKE_CXXFLAGS += -isystem /usr/include/botan-1.10
 QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 #LIBPATH += /root/Pobrane/Botan/
 CONFIG += c++11

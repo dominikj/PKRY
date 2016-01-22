@@ -15,20 +15,20 @@ Podprotokol2::Podprotokol2(Szyfrowanie& szyf, Baza& baza) : Podprotokol(szyf, ba
  */
 
 bool Podprotokol2::wykonaj(Uzytkownik* uz ,QByteArray dane) {
-    qDebug() << "Użytkownik ogłasza nową ofertę";
+    qDebug() << czas()<<"Użytkownik ogłasza nową ofertę";
 
     QByteArray daneAukcjaCalosc, podpis;
     podziel(dane,daneAukcjaCalosc,podpis);
     if(_szyfrowanie.sprawdzPodpis(uz->kluczPubliczny,podpis,daneAukcjaCalosc)) {
         QByteArrayList daneLista = daneAukcjaCalosc.split(SEPARATOR1);
         if(uz->numerRejestracyjny == daneLista.at(0) && QDateTime::currentDateTime().toTime_t() > daneLista.at(3).toInt()) {
-            qDebug() << "Numer rejestracyjny:" <<daneLista.at(0);
-            qDebug() << "Czas wygaśnięcia kluczy:" << daneLista.at(3);
-            qDebug() << "Pozytywnie uwierzytelniono firmę";
+            qDebug() <<czas() << "Numer rejestracyjny:" <<daneLista.at(0);
+            qDebug() << czas()<<"Czas wygaśnięcia kluczy:" << daneLista.at(3);
+            qDebug() << czas()<<"Pozytywnie uwierzytelniono firmę";
             (uz)->poloczenie()->wyslij("OK\n");
             Aukcja* aukcja = new Aukcja();
-            qDebug() << "Numer firmy: " << daneLista.at(2);
-            qDebug() << "Warunki aukcji:" << daneLista.at(1);
+            qDebug() << czas() <<"Numer firmy: " << daneLista.at(2);
+            qDebug() << czas() <<"Warunki aukcji:" << daneLista.at(1);
             QByteArrayList lista = daneLista.at(1).split(';');
             QByteArray zakonczenie =  lista.at(2);
 
@@ -51,8 +51,6 @@ bool Podprotokol2::wykonaj(Uzytkownik* uz ,QByteArray dane) {
             aukcja->kluczPrywatnyAukcjiCzescUczestnicy = czesciKlucza[2];
             aukcja->parametry = daneLista.at(1);
 
-            QObject::connect(aukcja,SIGNAL(zakonczonaAukcja(Aukcja*)),ster,SLOT(koniecAukcji(Aukcja*)));
-
             aukcja->timer.setSingleShot(true);
             try {
                 aukcja->timer.start(QDateTime::currentDateTime().msecsTo(aukcja->zakonczenie));
@@ -60,14 +58,21 @@ bool Podprotokol2::wykonaj(Uzytkownik* uz ,QByteArray dane) {
             catch(...) {
                 return false;
             }
-            _baza.aukcje.push_back(aukcja);
+
             QByteArray odpowiedz;
             qDebug() << aukcja->kluczPrywatnyAukcjiCzescFirma;
             QByteArray podpis = _szyfrowanie.podpisz(_baza.kluczGAPPrywatny,aukcja->kluczPrywatnyAukcjiCzescFirma);
             odpowiedz = scal(aukcja->kluczPrywatnyAukcjiCzescFirma,podpis);
-
+            try{
             SZYFR_TCP(uz)->wyslijSzyfrowane(uz->kluczPubliczny,odpowiedz);
-            qDebug() <<"Dodano aukcję";
+            }
+            catch(...){
+                qDebug() << czas() << "Błąd transmisji";
+                return false;
+            }
+             QObject::connect(aukcja,SIGNAL(zakonczonaAukcja(Aukcja*)),ster,SLOT(koniecAukcji(Aukcja*)));
+              _baza.aukcje.push_back(aukcja);
+            qDebug() <<czas()<<"Dodano aukcję";
             return true;
         }
         else

@@ -8,22 +8,24 @@ class Sterownik;
 namespace Ui {
 class NowaAukcja;
 }
-
+/**
+ * @brief Klasa okna nowej aukcji
+ */
 class NowaAukcja : public QDialog
 {
     Q_OBJECT
 
 public:
     struct polaAukcji{
-        QString numer_aukcji;
         QString nazwa_aukcji;
         QString opis_aukcji;
-        QDateTime data_rozpoczecia;
         QDateTime data_zakonczenia;
         QList<QString> lista_kryteriow;
     };
-    polaAukcji pola_aukcji;
+
     explicit NowaAukcja( Sterownik& ster,QWidget *parent = 0);
+
+    polaAukcji pola_aukcji;
     void zwrocPola(QString &test);
     QString przygotuj_dane_aukcji_do_wyslania(polaAukcji &pA);
     ~NowaAukcja();

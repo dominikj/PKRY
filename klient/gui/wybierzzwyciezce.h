@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QString>
 #include "sterownik/oczekujzwyciezcy.h"
-struct oferta{
+struct oferta {
     QString NRo;
     QString Non;
 };
@@ -12,7 +12,9 @@ struct oferta{
 namespace Ui {
 class WybierzZwyciezce;
 }
-
+/**
+ * @brief Okno wyboru zwycięzcy
+ */
 class WybierzZwyciezce : public QDialog
 {
     Q_OBJECT
@@ -20,7 +22,6 @@ class WybierzZwyciezce : public QDialog
 public:
     explicit WybierzZwyciezce(QWidget *parent = 0);
     void przekaz_liste_ofert(QString string_lista_ofert);
-     OczekujZwyciezcy* zwyciezca;
     ~WybierzZwyciezce();
 
 signals:
@@ -28,13 +29,12 @@ signals:
 
 public slots:
     void wyswietl_okno(QString dane);
-    void odpowiedz_serwera(QString odpowiedz);
+
 
 private slots:
     void on_pushButton_clicked();
 
 private:
-  //  Sterownik& _ster;
     QString numer_aukcji;
     QList<QString> lista_ofert;
     QList<QString> lista_numerow_oferentow;

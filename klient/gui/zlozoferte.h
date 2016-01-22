@@ -9,7 +9,9 @@
 namespace Ui {
 class zlozOferte;
 }
-
+/**
+ * @brief Okno składania oferty
+ */
 class zlozOferte : public QDialog
 {
     Q_OBJECT
@@ -25,7 +27,6 @@ signals:
 private slots:
     void on_pushButton_2_clicked();
     void on_pushButton_clicked();
-    void odpowiedz_od_serwera(QString odp, bool powodzenie);
 
 private:
     Ui::zlozOferte *ui;

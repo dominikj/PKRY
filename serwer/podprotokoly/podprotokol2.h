@@ -3,7 +3,9 @@
 #include "podprotokol.h"
 #include <QString>
 class Sterownik;
-
+/**
+ * @brief Klasa podprotokołu 2 po stronie serwera - ogłaszanie nowej aukcji
+ */
 class Podprotokol2 : public Podprotokol
 {
 public:

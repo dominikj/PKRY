@@ -13,7 +13,9 @@
 
 typedef std::deque<Uzytkownik*>::iterator UzytkIt;
 typedef std::deque<Uzytkownik*> UzytkLista;
-
+/**
+ * @brief Klasa kontrolera aplikacji
+ */
 class Sterownik : public QObject
 {
     Q_OBJECT

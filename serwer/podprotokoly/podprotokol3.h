@@ -2,7 +2,9 @@
 #define PODPROTOKOL3_H
 #include "podprotokol.h"
 #include <QString>
-
+/**
+ * @brief Klasa podprotokołu 3 po stronie serwera - dodawanie nowej oferty
+ */
 class Podprotokol3 : public Podprotokol
 {
 public:
@@ -13,7 +15,7 @@ public:
 
 private:
     Aukcja * _aukcja;
-    QString numerUczestnika;
+    QString _numerUczestnika;
 
 };
 

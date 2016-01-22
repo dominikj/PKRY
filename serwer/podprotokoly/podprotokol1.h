@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include "podprotokol.h"
+/**
+ * @brief Klasa podprotokołu 1 po stronie serwera - logowanie użytkownika
+ */
 class Podprotokol1 : public Podprotokol
 {
 public:

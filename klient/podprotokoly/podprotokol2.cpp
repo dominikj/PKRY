@@ -4,8 +4,7 @@
 
 Podprotokol2::Podprotokol2(Szyfrowanie& szyf, Tcp& tcp, Baza& baza) : Podprotokol(szyf, tcp, baza) {}
 /**
-  Wykonuje scenariusz podprotokołu 2 po stronie klienta (ogłaszanie aukcji)
- * @brief Podprotokol1::wykonaj
+ * @brief Wykonuje scenariusz podprotokołu 2 po stronie klienta (ogłaszanie aukcji)
  * @return sukces/porażka operacji
  */
 bool Podprotokol2::wykonaj() {
@@ -19,18 +18,29 @@ bool Podprotokol2::wykonaj() {
     QByteArray podpis = _szyfrowanie.podpisz(_baza.KluczPrywatny, Dc);
     Dc = scal(Dc,podpis);
    // qDebug() << Dc;
+    try{
     SZYFR_TCP->wyslijSzyfrowane(_baza.kluczGAP,"PODPROTOKOL2|" +Dc);
+    }
+    catch(...){
+        emit wyswietlKonsola(QString("Błąd transmisji"));
+        return false;
+     }
+
     QByteArray dane = SZYFR_TCP->odbierzLinie();
     if(dane != "OK\n") return false;
-
+    try{
     dane = SZYFR_TCP->odbierzSzyfrowane(_baza.KluczPrywatny);
+    }
+    catch(...){
+        emit wyswietlKonsola(QString("Błąd transmisji"));
+        return false;
+     }
     QByteArray daneZwrotneCalosc;
     podziel(dane,daneZwrotneCalosc,podpis);
     _baza.czescKluczaPrzetargu = daneZwrotneCalosc;
     if(_szyfrowanie.sprawdzPodpis(_baza.kluczGAP,podpis,daneZwrotneCalosc)) {
         qDebug() << daneZwrotneCalosc;
         emit wyswietlKonsola(QByteArray("Część klucza aukcji: "));
-           emit wyswietlKonsola(QByteArray( daneZwrotneCalosc.mid(0,daneZwrotneCalosc.size()/2)));
         emit wyswietlKonsola(QByteArray(daneZwrotneCalosc.mid(daneZwrotneCalosc.size()/2,-1)));
 
         return true;

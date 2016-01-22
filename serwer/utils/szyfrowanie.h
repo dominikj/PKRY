@@ -21,7 +21,9 @@ struct Klucze {
     QByteArray publiczny;
     QByteArray prywatny;
 };
-
+/**
+ * @brief Klasa realizująca szyfrowanie/deszyfrowanie danych i podział/scalanie sekretu
+ */
 class Szyfrowanie
 {
 public:

@@ -15,6 +15,9 @@
 class Sterownik;
 typedef std::deque<Uzytkownik*>::iterator UzytkIt;
 typedef std::deque<Uzytkownik*> UzytkLista;
+/**
+ * @brief Klasa serwera tcp
+ */
 class TcpSerwer : public QObject
 {
     Q_OBJECT
@@ -27,14 +30,12 @@ public:
         qDebug() << "Nasłuchuje";
     }
 ~TcpSerwer();
-signals:
 
-public slots:
+private slots:
       void nowePoloczenie();
 private:
       Sterownik* _ster;
     QTcpServer* _serw;
- //   UzytkIt _uzytkIt;
     UzytkLista& _uzytkLista;
     int _port;
     Szyfrowanie& _szyfr;

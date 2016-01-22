@@ -1,10 +1,10 @@
 #include "uzytkownik.h"
 
-void Uzytkownik::koniecPoloczenia(){
+void Uzytkownik::koniecPoloczenia() {
     emit poloczenieZamkniete(this);
 }
 
-void Uzytkownik::daneWBuforze(){
+void Uzytkownik::daneWBuforze() {
     emit przyszyDane(this);
 }
 

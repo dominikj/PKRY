@@ -43,8 +43,11 @@ HEADERS  += podprotokoly/podprotokol1.h \
 
 #FORMS    += gui/start.ui \
 
-INCLUDEPATH +=/usr/include/crypto++
-INCLUDEPATH += /usr/include/botan-1.10/
+#INCLUDEPATH +=/usr/include/crypto++
+#INCLUDEPATH += /usr/include/botan-1.10/
+QMAKE_CXXFLAGS += -isystem /usr/include/crypto++
+QMAKE_CXXFLAGS += -isystem /usr/include/botan-1.10
+QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 LIBS += -lcrypto++
 LIBS += -lbotan-1.10
 #LIBPATH += /root/Pobrane/Botan/

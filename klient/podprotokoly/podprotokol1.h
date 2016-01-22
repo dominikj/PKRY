@@ -5,10 +5,12 @@
 #include <string>
 #include "podprotokol.h"
 #define SZYFR_TCP (dynamic_cast<ProxyTcp*>(&_tcp))
-
+/**
+ * @brief Klasa podprotokołu 1 po stronie klienta - logowanie użytkownika
+ */
 class Podprotokol1 : public QObject, public Podprotokol
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
     Podprotokol1(Szyfrowanie& szyf, Tcp& tcp, Baza& baza);
     virtual bool wykonaj();

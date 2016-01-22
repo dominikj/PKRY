@@ -2,7 +2,9 @@
 #define PROXYTCP_H
 #include "tcp.h"
 #include "szyfrowanie.h"
-
+/**
+ * @brief Nakładka na podstawową klasę Tcp realizująca transmisję szyfrowaną
+ */
 class ProxyTcp : public Tcp
 {
 public:

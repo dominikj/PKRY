@@ -21,14 +21,18 @@ Start::~Start()
 {
     delete ui;
 }
-
+/**
+ * @brief funckja wykonywana po naciśnięciu przycisku wyczyść
+ */
 void Start::on_pushButton_2_clicked()
 {
     ui->lineEdit->clear();
     ui->lineEdit_2->clear();
     ui->lineEdit_3->clear();
 }
-
+/**
+ * @brief Funkcja wykonywana po naciśnięciu przycisku zaloguj
+ */
 void Start::on_pushButton_clicked()
 {
     login = ui->lineEdit->text();
@@ -43,19 +47,18 @@ void Start::on_pushButton_clicked()
     }
     else
     {
-//        QMessageBox msgBox;
-//        msgBox.
-//                msgBox.setText("Niepoprawne dane. Spróbuj ponownie.");
-//        msgBox.exec();
+
         QMessageBox::critical(this,"Niepowodzenie","Niepoprawne dane. Spróbuj ponownie.");
     }
 }
-
+/**
+ * @brief Funkcja sprawdzająca poprawność danych logowania
+ * @return sukces/porażka
+ */
 bool Start::checkLoginAndPassword()
 {
-    //tutaj komunikacja z serwerem w klasie Podprotokol1
     _sterownik.ustawDaneLogSer(login, haslo, serwer);
-     if (_sterownik.zaloguj())
+    if (_sterownik.zaloguj())
     {
         emit uruchom(true);
         poprawne_logowanie = true;

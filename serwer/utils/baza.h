@@ -6,7 +6,9 @@
 #include "utils/aukcja.h"
 #include <deque>
 using namespace Botan;
-
+/**
+ * @brief Klasa z danymi, które są wykorzystywane w wielu miejscach w programie
+ */
 struct Baza
 {
 public:

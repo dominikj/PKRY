@@ -4,15 +4,16 @@
 #include "start.h"
 #include "oknoglowne.h"
 class Sterownik;
+/**
+ * @brief Klasa  GUI agregująca pozostałe komponenty GUI
+ */
 class GUI
 {
 
 public:
-    GUI(Sterownik& ster) : _sterownik(ster), _logowanie(0,ster), _oknoglowne(0,ster,_logowanie){
-        _wyborzwyciezcy = new WybierzZwyciezce(0);
+    GUI(Sterownik& ster) : _logowanie(0,ster), _oknoglowne(0,ster,_logowanie),  _sterownik(ster){
     }
     void uruchom();
-    WybierzZwyciezce *_wyborzwyciezcy;
 
 private:
     Start _logowanie;

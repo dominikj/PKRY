@@ -21,10 +21,13 @@ struct Klucze {
     QByteArray publiczny;
     QByteArray prywatny;
 };
-
+/**
+ * @brief Klasa szyfrująca/deszyfrująca dane i realizująca podział sekretu algorytmem Shamira
+ */
 class Szyfrowanie
 {
 public:
+
 
     Szyfrowanie();
     Klucze generujKlucze();
@@ -32,11 +35,11 @@ public:
     QByteArray deszyfruj(QString klucz, QByteArray dane);
     QByteArray podpisz(QString klucz, QByteArray dane);
     bool sprawdzPodpis(QString klucz,QByteArray podpis, QByteArray dane);
-    QByteArray przywrocSekret(int minimalneUczestnictwo);
+    QByteArray przywrocSekret(int minimalneUczestnictwo, std::vector<QByteArray> dane);
     std::vector<QByteArray> podzielSekret(int minimalneUczestnictwo, int liczbaUdzialow, QByteArray dane);
 private:
     LibraryInitializer _init;
-    void zapiszDoBufora(QByteArray dane);
+    void zapiszDoBufora(QByteArray dane, QString nazwa);
     std::vector<QByteArray> wczytajZBufora(int liczbaFragmentow,std::string prefix);
 };
 

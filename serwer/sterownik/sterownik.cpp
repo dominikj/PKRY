@@ -10,16 +10,22 @@ void Sterownik::koniecPoloczenia(Uzytkownik* uz) {
     }
     qDebug() << "Użytkownik: " << ((uz->nazwa != "") ? uz->nazwa : QString::number(uz->numerWew)) << " rozłączył się";
 }
-
+/**
+ * @brief decyduje, co zrobić z przychodzącymi danymi
+ * @param uz użytkownik, który przysłał dane
+ */
 void Sterownik::przyszlyDane(Uzytkownik *uz) {
-
-//   qDebug() << "Odebrano dane od użytkownika:" << uz->numerWew;
-    QByteArray rozkaz,tmp, dane = SZYFR_TCP(uz)->odbierzSzyfrowane(_baza.kluczGAPPrywatny);
+    QByteArray rozkaz,tmp, dane ;
+    try{
+     dane = SZYFR_TCP(uz)->odbierzSzyfrowane(_baza.kluczGAPPrywatny);
+    }
+catch(...){
+    qDebug() << "Błąd transmisji";
+}
     int i;
     for( i =0; dane[i] != SEPARATOR3; ++i) {
         rozkaz += dane[i];
     }
-    qDebug() << rozkaz;
     if( rozkaz == "PODPROTOKOL1")
         _podprot1->wykonaj(uz,dane.mid(++i,-1));
     else if( rozkaz == "PODPROTOKOL2")
@@ -37,7 +43,10 @@ void Sterownik::przyszlyDane(Uzytkownik *uz) {
     else if( rozkaz == "PODPROTOKOL42")
         _podprot4->wykonaj5(uz,dane.mid(++i,-1));
 }
-
+/**
+ * @brief Wysyła listę dostępnych aukcji do klienta
+ * @param uzuz użytkownik, który tego zażądał
+ */
 void Sterownik::wyslijAukcje(Uzytkownik* uz) {
     QByteArray aukcja;
     for(Aukcja* a : _baza.aukcje) {
@@ -46,7 +55,10 @@ void Sterownik::wyslijAukcje(Uzytkownik* uz) {
     uz->poloczenie()->wyslij(aukcja);
 
 }
-
+/**
+ * @brief Wykonuje się, gdy, nastąpi timeout timera aukcji
+ * @param au aukcja
+ */
 void Sterownik::koniecAukcji(Aukcja* au) {
     qDebug() << "KONIEC AUKCJI NR: "<< au->numerAukcji;
     _podprot4->aukcja = au;

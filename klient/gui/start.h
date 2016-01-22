@@ -7,7 +7,9 @@ class Sterownik;
 namespace Ui {
 class Start;
 }
-
+/**
+ * @brief okno powitalne logowania
+ */
 class Start : public QMainWindow
 {
     Q_OBJECT
@@ -15,7 +17,7 @@ class Start : public QMainWindow
 public:
     explicit Start(QWidget *parent, Sterownik& ster);
     ~Start();
-    static bool poprawne_logowanie;
+
 
 private slots:
     void on_pushButton_2_clicked();
@@ -25,6 +27,7 @@ signals:
     void uruchom(bool t);
 
 private:
+    static bool poprawne_logowanie;
     Ui::Start *ui;
     QString serwer;
     QString login;

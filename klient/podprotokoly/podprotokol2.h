@@ -4,7 +4,9 @@
 #include <QString>
 #include "utils/proxytcp.h"
 #define SZYFR_TCP (dynamic_cast<ProxyTcp*>(&_tcp))
-
+/**
+ * @brief Klasa podprotokołu 2 po stronie klienta - ogłaszanie nowej aukcji
+ */
 class Podprotokol2 : public QObject, public Podprotokol
 {
     Q_OBJECT

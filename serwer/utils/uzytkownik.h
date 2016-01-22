@@ -3,37 +3,43 @@
 
 #include <QObject>
 #include "utils/tcp.h"
-
+/**
+ * @brief Klasa pojedynczego użytkownika
+ */
 class Uzytkownik : public QObject
 {
     Q_OBJECT
 public:
-    explicit Uzytkownik(QObject *parent = 0, Tcp* soc = 0): _soc(soc){
+    explicit Uzytkownik(QObject *parent = 0, Tcp* soc = 0): _soc(soc) {
         connect(_soc->gniazdo(),SIGNAL(disconnected()),this,SLOT(koniecPoloczenia()));
-         connect(_soc->gniazdo(),SIGNAL(readyRead()),this,SLOT(daneWBuforze()));
+        connect(_soc->gniazdo(),SIGNAL(readyRead()),this,SLOT(daneWBuforze()));
     }
- bool operator==(Uzytkownik& uz) const { if(numerWew == uz.numerWew) return true; else return false;}
-  Tcp* const poloczenie() {return _soc;}
+    bool operator==(Uzytkownik& uz) const {
+        if(numerWew == uz.numerWew) return true;
+        else return false;
+    }
+    Tcp* const poloczenie() {
+        return _soc;
+    }
 
 signals:
-       void poloczenieZamkniete(Uzytkownik* uz);
-       void przyszyDane(Uzytkownik* uz);
-public slots:
-     void koniecPoloczenia();
-     void daneWBuforze();
+    void poloczenieZamkniete(Uzytkownik* uz);
+    void przyszyDane(Uzytkownik* uz);
+private slots:
+    void koniecPoloczenia();
+    void daneWBuforze();
 private:
- Tcp* _soc;
+    Tcp* _soc;
 public:
- bool uzyte = false;
-  unsigned int numerWew; // Nie zmieniać!
+    unsigned int numerWew; // Nie zmieniać!
 
-  QByteArray PKc;
-  QString nazwa = "";
+    QByteArray PKc;
+    QString nazwa = "";
 
-  QString numerRejestracyjny; // NRc
-  QByteArray kluczPubliczny; //PKc
-  QByteArray KluczPrywatny; //SKc
-  QString czasWygenKluczy; //TNRc
+    QString numerRejestracyjny; // NRc
+    QByteArray kluczPubliczny; //PKc
+    QByteArray KluczPrywatny; //SKc
+    QString czasWygenKluczy; //TNRc
 
 };
 

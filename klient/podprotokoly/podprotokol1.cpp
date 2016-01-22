@@ -17,13 +17,24 @@ bool Podprotokol1::wykonaj() {
     QByteArray Dc = tmp.toLatin1();
     QByteArray podpis = _szyfrowanie.podpisz(_baza.SKcca, Dc);
     Dc = scal(Dc,podpis);
+    try{
     SZYFR_TCP->wyslijSzyfrowane(_baza.kluczGAP,"PODPROTOKOL1|" +Dc);
+    }
+    catch(...){
+        emit wyswietlKonsola(QString("Błąd transmisji"));
+        return false;
+     }
      qDebug() << "info";
     QByteArray dane = SZYFR_TCP->odbierzLinie();
      qDebug() << "info";
     if(dane != "OK\n") return false;
-
+    try{
     dane = SZYFR_TCP->odbierzSzyfrowane(_baza.SKcca);
+    }
+    catch(...){
+        emit wyswietlKonsola(QString("Błąd transmisji"));
+        return false;
+     }
     qDebug() << "info";
     QByteArray daneZwrotneCalosc;
     podziel(dane,daneZwrotneCalosc,podpis);
@@ -35,7 +46,7 @@ bool Podprotokol1::wykonaj() {
         emit wyswietlKonsola("Indywidualny klucz publiczny: "+ (_baza.kluczPubliczny = daneZwrotneLista.at(3)));
         return true;
     }
-    return false; //TODO: Poprawić jeden if w serwerze
+    return false;
 
 }
 

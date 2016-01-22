@@ -5,6 +5,9 @@
 #include <QMainWindow>
 #include <iostream>
 #define TIMEOUT 200
+/**
+ * @brief Klasa połączenia tcp
+ */
 class Tcp: public QObject
 {
     Q_OBJECT
